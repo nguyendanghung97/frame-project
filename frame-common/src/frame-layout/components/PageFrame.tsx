@@ -4,8 +4,13 @@ import {
   createPageContextValue,
   type PageContextType,
 } from '../contexts'
-import type { PageParams, SearchParams } from '../types'
+import type { ModuleState, PageParams, SearchParams } from '../types'
 import { cn } from '../cn'
+import {
+  getAppState,
+  subscribeToAppState,
+  syncFromBrowserLocation,
+} from '../stores/appStateStore'
 
 export interface PageFrameProps {
   className?: string
@@ -16,36 +21,60 @@ export interface PageFrameProps {
 interface PageFrameState {
   pageParams: PageParams
   pageSearch: SearchParams
+  moduleState: ModuleState
   loading: Record<string, boolean>
   paramSwitcherRegistry: Record<string, string>
 }
 
 /**
- * Minimal app chrome provider — supplies PageContext for SectionWrapper / PageModule.
- * No rjs-admin / rjs-frame dependency.
+ * App chrome provider — supplies PageContext for SectionWrapper / PageModule.
+ * Syncs pageParams / pageSearch / moduleState from frame-layout appStateStore.
+ * URL: pageParams ↔ hash, pageSearch ↔ query (see urlUtils).
  */
 export abstract class PageFrame<
   T extends PageFrameProps = PageFrameProps,
   S extends PageFrameState = PageFrameState,
 > extends React.Component<T, S> {
+  private unsubscribeAppState?: () => void
+
   updateState(state: Partial<S>) {
     this.setState((prev) => ({ ...prev, ...state }))
   }
 
   constructor(props: T) {
     super(props)
+    const { pageParams, pageSearch, moduleState } = getAppState()
     this.state = {
-      pageParams: {},
-      pageSearch: {},
+      pageParams,
+      pageSearch,
+      moduleState,
       loading: {},
       paramSwitcherRegistry: {},
     } as S
+  }
+
+  private onBrowserNavigation = () => {
+    syncFromBrowserLocation()
   }
 
   componentDidMount() {
     if (this.props.title && typeof document !== 'undefined') {
       document.title = this.props.title
     }
+
+    // Re-hydrate in case the store was created before navigation / HMR
+    syncFromBrowserLocation()
+
+    this.unsubscribeAppState = subscribeToAppState((appState) => {
+      this.updateState({
+        pageParams: appState.pageParams,
+        pageSearch: appState.pageSearch,
+        moduleState: appState.moduleState,
+      } as Partial<S>)
+    })
+
+    window.addEventListener('popstate', this.onBrowserNavigation)
+    window.addEventListener('hashchange', this.onBrowserNavigation)
   }
 
   componentDidUpdate(prevProps: PageFrameProps) {
@@ -54,6 +83,12 @@ export abstract class PageFrame<
         document.title = this.props.title
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeAppState?.()
+    window.removeEventListener('popstate', this.onBrowserNavigation)
+    window.removeEventListener('hashchange', this.onBrowserNavigation)
   }
 
   private registerParamSwitcher = (paramKey: string, moduleId: string) => {
@@ -84,6 +119,7 @@ export abstract class PageFrame<
     const pageContext: PageContextType = createPageContextValue(
       this.state.pageParams,
       this.state.pageSearch,
+      this.state.moduleState,
       {
         setLoading: (loadingKey, loadingValue) => {
           const loading =
@@ -98,11 +134,6 @@ export abstract class PageFrame<
         registerParamSwitcher: this.registerParamSwitcher,
         unregisterParamSwitcher: this.unregisterParamSwitcher,
         getParamSwitcher: this.getParamSwitcher,
-        setPageParams: (params) => {
-          this.updateState({
-            pageParams: { ...this.state.pageParams, ...params },
-          } as Partial<S>)
-        },
       },
     )
 

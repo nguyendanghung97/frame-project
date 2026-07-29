@@ -1,4 +1,4 @@
-@import 'frame-common/index.css';
+@import '../../../frame-common/src/styles/index.css';
 
 @import './app-frame.css';
 @import './header.css';

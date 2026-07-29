@@ -5,6 +5,7 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
+const frameCommonSrc = path.resolve(rootDir, '../frame-common/src')
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,12 +16,24 @@ export default defineConfig({
   build: {
     cssMinify: false,
   },
+  server: {
+    fs: {
+      // Allow importing frame-common source outside project/
+      allow: [rootDir, path.resolve(rootDir, '..')],
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(rootDir, 'src'),
+      // Dev like ncs-common: resolve package to source (no rebuild dist for HMR)
+      'frame-common': frameCommonSrc,
+      '@common': frameCommonSrc,
       react: path.resolve(rootDir, 'node_modules/react'),
       'react-dom': path.resolve(rootDir, 'node_modules/react-dom'),
     },
-    dedupe: ['react', 'react-dom'],
+    dedupe: ['react', 'react-dom', 'react-router-dom'],
+  },
+  optimizeDeps: {
+    exclude: ['frame-common'],
   },
 })

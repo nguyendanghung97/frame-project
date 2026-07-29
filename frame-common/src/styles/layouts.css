@@ -38,13 +38,13 @@
 }
 
 .frame-section--sidebar {
-  border-right: 1px solid #e5e5e5;
+  border-right: 2px solid #0d9488;
 }
 
 .frame-section--right {
   width: 100%;
   overflow: auto;
-  border-left: 1px solid #e5e5e5;
+  border-left: 2px solid #0d9488;
 }
 
 .frame-section-wrapper {

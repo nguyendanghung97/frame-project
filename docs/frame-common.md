@@ -4,7 +4,14 @@
 
 Tham chiếu cấu trúc tương tự: `ncs-common` trong NCS frontend (Vite library mode + peer React).
 
-- Page layout system: [`docs/frame-layout.md`](./frame-layout.md)
+## Tài liệu liên quan
+
+| Doc | Nội dung |
+|-----|----------|
+| [`frame-layout.md`](./frame-layout.md) | Primitive layout (`PageFrame`, `PageLayout`, sections) + layouts sẵn có |
+| [`app-state.md`](./app-state.md) | `updatePageParams` / `updateModuleState`, URL hash/query, đọc qua `usePageContext` |
+| [`app-state-flow.md`](./app-state-flow.md) | Luồng kết nối store ↔ `PageFrame` ↔ pages |
+| [`convention/001.naming-convention.md`](./convention/001.naming-convention.md) | Naming (từ rjs-frame) |
 
 ## Vai trò
 
@@ -15,38 +22,23 @@ Tham chiếu cấu trúc tương tự: `ncs-common` trong NCS frontend (Vite lib
 | **Peer deps** | `react`, `react-dom`, `react-router-dom` (app cung cấp) |
 | **Alias nội bộ** | `@common/*` → `src/*` |
 
-## Khởi tạo ban đầu (đã làm)
-
-1. Scaffold app bằng create-vite:
-
-```bash
-npm create vite@latest frame-common -- --template react-ts
-cd frame-common
-npm install
-```
-
-2. Chuyển sang **library mode**:
-
-- `vite.config.ts`: `build.lib`, `rollupOptions.external`, `vite-plugin-dts`
-- `package.json`: `main` / `module` / `types` / `exports` trỏ `dist/`; React thành `peerDependencies`
-- Xóa phần app: `index.html`, `public/`, `src/main.tsx`, `src/App.tsx`, …
-- Entry công khai: `src/index.ts`
-
 ## Cấu trúc hiện tại
 
 ```
 frame-common/
-├── justfile              # install / build / watch
-├── package.json
-├── vite.config.ts        # lib mode
-├── tsconfig.json         # paths: @common/*
-├── tsconfig.node.json
+├── justfile
+├── package.json          # exports: "."
+├── vite.config.ts        # lib mode + vite-plugin-dts
+├── tsconfig.json
 └── src/
-    ├── index.ts          # public API
+    ├── index.ts          # public API: frame-layout + layouts
+    ├── frame-layout/     # PageFrame, store, urlUtils, contexts
+    ├── layouts/          # ThreeColumns, TwoColumns*, ReportsPageLayout
+    ├── styles/           # layouts.css, resize.css — app import từ src
     └── vite-env.d.ts
 ```
 
-Public API chỉ export những gì re-export từ `src/index.ts`. Phần còn lại trong `src/` là nội bộ (có thể import qua `@common/...` trong chính lib).
+Public API chỉ export những gì re-export từ `src/index.ts` (qua `frame-layout` + `layouts`).
 
 ## Build & phát triển
 
@@ -64,7 +56,7 @@ just build
 just watch
 ```
 
-`files` trong `package.json` chỉ publish/pack `dist/` — consumer resolve từ bản build, không phải `src/` (trừ khi app tự alias vào `src`).
+`files` trong `package.json` chỉ publish/pack `dist/`. App `project/` **không** phụ thuộc `dist` khi dev — Vite alias vào `src` (xem dưới).
 
 ## Dùng từ app (`project/`)
 
@@ -80,71 +72,71 @@ Trong `project/package.json`:
 }
 ```
 
-Rồi:
-
 ```bash
-cd project
-npm install
+cd project && npm install
 ```
 
-Đảm bảo `react` / `react-dom` của app thỏa peer range của `frame-common` (`^19`).
+Đảm bảo `react` / `react-dom` thỏa peer (`^19`).
 
-### 2. Build lib trước khi chạy app
+### 2. Dev: alias vào `src` (không cần rebuild `dist`)
 
-```bash
-cd frame-common && npm run build
-# hoặc npm run watch song song với npm run dev của app
-```
+Giống `ncs-common` trong NCS: app resolve thẳng source qua Vite alias. Sửa `frame-common` → HMR ngay, **không** chạy `npm run build` mỗi lần.
 
-### 3. Import
+`project/vite.config.ts` đã cấu hình:
 
 ```ts
-import { /* exports */ } from 'frame-common'
-```
-
-Chỉ dùng được symbol đã export từ `src/index.ts`.
-
-### 4. (Tuỳ chọn) Alias thẳng vào `src` khi dev
-
-Nếu muốn HMR / không cần rebuild `dist` mỗi lần sửa lib, trong `project/vite.config.ts`:
-
-```ts
-import path from 'node:path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      'frame-common': path.resolve(__dirname, '../frame-common/src/index.ts'),
-      '@common': path.resolve(__dirname, '../frame-common/src'),
-    },
-  },
-})
-```
-
-Và trong `project` tsconfig (nếu cần IDE resolve):
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "frame-common": ["../frame-common/src/index.ts"],
-      "@common/*": ["../frame-common/src/*"]
-    }
-  }
+alias: {
+  'frame-common': path.resolve(rootDir, '../frame-common/src'),
+  '@common': path.resolve(rootDir, '../frame-common/src'),
 }
 ```
 
-Production vẫn nên build `frame-common` → `dist/` và resolve qua `file:` dependency bình thường.
+CSS (như ncs-common): import relative tới `src/styles`, không qua package export / `dist`:
+
+```css
+/* project/src/styles/index.css */
+@import '../../../frame-common/src/styles/index.css';
+```
+
+`npm run build` trong `frame-common` chỉ để **check type / emit `dist`** (CI, publish), không phải bước bắt buộc trước `project` dev.
+
+### 3. Import JS
+
+```ts
+import {
+  PageFrame,
+  ThreeColumns,
+  PageModule,
+  updatePageParams,
+  usePageContext,
+} from 'frame-common'
+```
+
+### 4. Pattern state (tóm tắt)
+
+- **Ghi:** `updatePageParams` / `updateModuleState` (store).
+- **Đọc UI:** `usePageContext().pageParams` (và `moduleState`).
+- Chi tiết + URL hash: [`app-state.md`](./app-state.md).
+
+### 5. Khi nào cần `frame-common` build?
+
+| Việc | Cần `npm run build`? |
+|------|----------------------|
+| `project` `npm run dev` / Vite build app (có alias) | Không |
+| Check lỗi TypeScript / emit `dist` | Có |
+| Consumer không alias (chỉ `file:` → `dist`) | Có |
+
+```bash
+cd frame-common && npm run build   # check + dist
+cd ../project && npm run dev       # dùng src qua alias
+```
 
 ## Thêm code vào lib
 
-1. Tạo module dưới `src/` (ví dụ `src/components/Button.tsx`).
-2. Re-export từ `src/index.ts` (hoặc barrel trung gian rồi export ở `index.ts`).
-3. `npm run build` (hoặc `watch`).
-4. Import từ app: `import { Button } from 'frame-common'`.
+1. Tạo module dưới `src/` (ví dụ layout mới trong `src/layouts/`).
+2. Re-export từ barrel (`layouts/index.ts` hoặc `frame-layout/index.ts`) — đã được `src/index.ts` export.
+3. App `project` (alias) nhận thay đổi qua HMR — không cần build lib.
+4. Tuỳ chọn: `npm run build` trong `frame-common` để check type / emit `dist`.
 
 ### External dependencies
 
@@ -159,12 +151,13 @@ Hiện external sẵn: `react`, `react-dom`, `react/jsx-runtime`, `react-router`
 
 - Không dùng `baseUrl` (deprecated trong TypeScript 6).
 - Alias dùng `paths` với đường dẫn đầy đủ, ví dụ `"@common/*": ["./src/*"]`.
-- Không thêm `ignoreDeprecations: "6.0"` nếu IDE vẫn dùng TypeScript &lt; 6 (sẽ báo *Invalid value*).
+- Không thêm `ignoreDeprecations: "6.0"` nếu IDE vẫn dùng TypeScript &lt; 6.
 
 ## Checklist triển khai nhanh
 
-- [ ] `cd frame-common && npm install && npm run build`
-- [ ] App: `"frame-common": "file:../frame-common"` + `npm install`
-- [ ] App cung cấp `react` / `react-dom` (và `react-router-dom` nếu lib dùng)
-- [ ] Export API qua `src/index.ts`
-- [ ] Dependency mới của lib: peer + `external` nếu không muốn bundle
+- [ ] `cd frame-common && npm install` (build chỉ khi cần check / `dist`)
+- [ ] App: `"frame-common": "file:../frame-common"` + Vite alias → `../frame-common/src`
+- [ ] App import CSS từ `../../../frame-common/src/styles/index.css`
+- [ ] App cung cấp `react` / `react-dom` / `react-router-dom`
+- [ ] Route cha dùng `PageFrame`; page fill layout bằng `PageModule`
+- [ ] State lên URL → `updatePageParams` ([`app-state.md`](./app-state.md))

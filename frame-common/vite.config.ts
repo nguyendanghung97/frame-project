@@ -31,11 +31,7 @@ export default defineConfig({
         'react-router',
         'react-router-dom',
       ],
-      output: {
-        assetFileNames: 'index.css',
-      },
     },
     sourcemap: true,
-    cssCodeSplit: false,
   },
 })

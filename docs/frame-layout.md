@@ -4,6 +4,9 @@ Hệ thống bố cục trang của `frame-common`, tách từ `rjs-admin` **kh�
 
 Layouts sẵn có (`ThreeColumns`, `TwoColumnsWithRightPanel`, …) nằm ở `frame-common/src/layouts/` và **build trên** các primitive trong `frame-common/src/frame-layout/`.
 
+App state / URL (`updatePageParams`, …): [`docs/app-state.md`](./app-state.md).  
+Luồng store ↔ `PageFrame` ↔ pages: [`docs/app-state-flow.md`](./app-state-flow.md).
+
 ## Ý tưởng
 
 1. **Layout** khai báo *khung* (cột / vùng) bằng `SectionWrapper` + `PageSection`.
@@ -11,7 +14,7 @@ Layouts sẵn có (`ThreeColumns`, `TwoColumnsWithRightPanel`, …) nằm ở `f
 3. `PageLayout` gom children theo `sectionName` → đưa vào `LayoutContext` → `PageSection` render đúng chỗ.
 
 ```
-PageFrame (PageContext)
+PageFrame (PageContext — đọc pageParams / moduleState)
   └─ YourLayout extends PageLayout
         ├─ SectionWrapper + PageSection name="sidebar"
         ├─ SectionWrapper + PageSection name="main"
@@ -27,13 +30,14 @@ PageFrame (PageContext)
 
 | Component | Vai trò |
 |-----------|---------|
-| **`PageFrame`** | App chrome provider. Cung cấp `PageContext` (bắt buộc nếu dùng `condition` / một số API). Subclass và implement `renderContent()` (thường là header + `<Outlet />`). |
+| **`PageFrame`** | App chrome provider. Cung cấp `PageContext` (bắt buộc nếu dùng `condition` / một số API). Subscribe app store + sync URL back/forward. Subclass và implement `renderContent()` (thường là header + `<Outlet />`). |
 | **`PageLayout`** | Base class cho layout. Gom children theo `sectionName`, cung cấp `LayoutContext`. Subclass implement `renderContent()`. |
 | **`PageSection`** | Slot đích trong layout. `name` phải khớp `sectionName` của module. |
-| **`SectionWrapper`** | Wrapper cột (optional resize, `condition`). |
+| **`SectionWrapper`** | Wrapper cột (optional resize, `condition` theo `pageParams`). |
 | **`PageModule`** | Nội dung page gắn vào một section (`sectionName` bắt buộc). |
 
-Hỗ trợ thêm: `cn`, `matchPageParams`, `usePageContext`, `useLayoutContext`.
+Helpers: `cn`, `matchPageParams`, `usePageContext` (đọc), `useLayoutContext`.  
+Mutations / URL: xem [`app-state.md`](./app-state.md) — **không** gắn lên `usePageContext`.
 
 ## Cách build một layout mới
 
@@ -91,34 +95,36 @@ Dùng class trong `src/styles/` (không phụ thuộc Tailwind):
 
 - `layouts.css` — `.frame-layout-row`, `.frame-layout-col`, `.frame-section`, …
 - `resize.css` — handle khi `resizable="left"|"right"`
-- Entry: `src/styles/index.css` → build ra `dist/index.css`
+- Entry: `src/styles/index.css` — app import relative (không ship trong `dist`, giống ncs-common)
 
 App import:
 
 ```css
 /* project/src/styles/index.css */
-@import 'frame-common/index.css';
+@import '../../../frame-common/src/styles/index.css';
 ```
 
-### 4. Build lib
+### 4. Check lib (không bắt buộc cho `project` dev)
+
+`project` alias vào `frame-common/src` — sửa lib là HMR, không cần rebuild `dist`.
 
 ```bash
 cd frame-common
-npm run build   # hoặc: npm run watch
+npm run build   # chỉ để tsc check + emit dist (CI / publish)
 ```
 
 ### Gợi ý khi design layout
 
 - Mỗi `PageSection name="…"` = một slot public mà page phải fill.
 - `SectionWrapper` + `resizable` cho cột kéo được.
-- `condition={{ key: true }}` — chỉ hiện khi `pageParams.key === true` (set qua `usePageContext().setPageParams`). Điều kiện rỗng / không có → luôn hiện.
+- `condition={{ key: true }}` — chỉ hiện khi `pageParams.key === true` (ghi bằng `updatePageParams({ key: true })` từ store). Điều kiện rỗng / không có → luôn hiện.
 - Prefer class semantic (`frame-layout-*`) thay vì utility Tailwind (lib không ship Tailwind).
 
 ## Cách sử dụng trong app
 
 ### Bước 0 — `PageFrame` ở route cha
 
-Layout cần `PageContext` từ `PageFrame` (đặc biệt khi có resize / condition):
+Layout cần `PageContext` từ `PageFrame` (đặc biệt khi có resize / condition / đọc `pageParams`):
 
 ```tsx
 // frame.tsx
@@ -154,13 +160,29 @@ Gắn vào router:
 **Cách A — `PageModule` (khuyến nghị):**
 
 ```tsx
-import { PageModule, ThreeColumns } from 'frame-common'
+import { PageModule, ThreeColumns, updatePageParams, usePageContext } from 'frame-common'
+
+function PatientsMain() {
+  const { pageParams } = usePageContext()
+  const selected = pageParams.patient as string | undefined
+
+  return (
+    <button
+      type="button"
+      onClick={() => updatePageParams({ patient: 'Jane Doe' })}
+    >
+      {selected ?? 'Pick'}
+    </button>
+  )
+}
 
 export function PatientsPage() {
   return (
     <ThreeColumns title="Patients" minSidebarWidth={240} minRightPanelWidth={280}>
       <PageModule sectionName="sidebar">…filters…</PageModule>
-      <PageModule sectionName="main">…table…</PageModule>
+      <PageModule sectionName="main">
+        <PatientsMain />
+      </PageModule>
       <PageModule sectionName="rightPanel">…detail…</PageModule>
     </ThreeColumns>
   )
@@ -209,12 +231,13 @@ export function HomePage() {
 
 ## Checklist debug
 
-- [ ] App đã `import 'frame-common/index.css'` (qua styles entry)?
+- [ ] App đã import CSS từ `frame-common/src/styles`?
 - [ ] Route page nằm **trong** `PageFrame`?
-- [ ] Đã `npm run build` `frame-common` sau khi sửa layout?
+- [ ] Vite alias `frame-common` → `../frame-common/src` (không cần rebuild dist khi dev)?
 - [ ] Mọi child có `sectionName` khớp slot?
 - [ ] Cột xếp dọc? → thiếu CSS flex (`frame-layout-row`) — kiểm tra import CSS.
-- [ ] Sidebar / filter không hiện? → kiểm tra `condition` và `pageParams`.
+- [ ] Sidebar / filter không hiện? → kiểm tra `condition` và `pageParams` ([`app-state.md`](./app-state.md)).
+- [ ] Reload mất selection? → state đó phải nằm trong `pageParams` / hash, không phải `moduleState`.
 
 ## Cấu trúc folder
 
@@ -227,10 +250,14 @@ frame-common/src/frame-layout/
     SectionWrapper.tsx
     PageModule.tsx
     index.ts
+  stores/
+    appStateStore.ts
+  utils/
+    urlUtils.ts
   contexts.tsx
   matchPageParams.ts
   cn.ts / types.ts
   index.ts
 ```
 
-Tài liệu này: [`docs/frame-layout.md`](./frame-layout.md).
+Tài liệu liên quan: [`frame-common.md`](./frame-common.md) · [`app-state.md`](./app-state.md) · [`app-state-flow.md`](./app-state-flow.md).

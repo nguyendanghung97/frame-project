@@ -1,10 +1,20 @@
 import { createContext, useContext, type ReactNode } from 'react'
-import type { PageParams, ParamSpec, SearchParams } from './types'
+import type {
+  ModuleState,
+  PageParams,
+  ParamSpec,
+  SearchParams,
+} from './types'
 import { matchPageParams as matchPageParamsFn } from './matchPageParams'
 
+/**
+ * Read-only page snapshot for layout / condition matching.
+ * Mutations live on the store: `updatePageParams`, `updateModuleState`, …
+ */
 export interface PageContextType {
   pageParams: PageParams
   pageSearch: SearchParams
+  moduleState: ModuleState
   setLoading: (loadingKey: string, loadingValue?: boolean) => void
   getLoading: (loadingKey: string) => boolean
   registerParamSwitcher: (paramKey: string, moduleId: string) => void
@@ -14,7 +24,6 @@ export interface PageContextType {
     paramSpec: ParamSpec | undefined,
     componentName: string,
   ) => boolean
-  setPageParams: (params: PageParams) => void
 }
 
 export interface LayoutContextType {
@@ -41,10 +50,11 @@ export const useLayoutContext = () => {
   return context
 }
 
-/** Build a PageContext value from local page params (no rjs-frame). */
+/** Build a PageContext value from current app state slices. */
 export function createPageContextValue(
   pageParams: PageParams,
   pageSearch: SearchParams,
+  moduleState: ModuleState = {},
   extras: Partial<
     Pick<
       PageContextType,
@@ -53,19 +63,18 @@ export function createPageContextValue(
       | 'registerParamSwitcher'
       | 'unregisterParamSwitcher'
       | 'getParamSwitcher'
-      | 'setPageParams'
     >
   > = {},
 ): PageContextType {
   return {
     pageParams,
     pageSearch,
+    moduleState,
     setLoading: extras.setLoading ?? (() => {}),
     getLoading: extras.getLoading ?? (() => false),
     registerParamSwitcher: extras.registerParamSwitcher ?? (() => {}),
     unregisterParamSwitcher: extras.unregisterParamSwitcher ?? (() => null),
     getParamSwitcher: extras.getParamSwitcher ?? (() => null),
-    setPageParams: extras.setPageParams ?? (() => {}),
     matchPageParams: (paramSpec, componentName) =>
       matchPageParamsFn(paramSpec, pageParams, componentName),
   }

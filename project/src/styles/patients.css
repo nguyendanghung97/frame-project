@@ -1,26 +1,69 @@
 .patients-col {
   height: 100%;
   padding: 1rem 1.25rem;
-  background: #fff;
+  background: #fafcfb;
 }
 
 .patients-col__title {
   margin: 0 0 0.5rem;
   font-size: 1.125rem;
+  color: #0f766e;
 }
 
 .patients-col__text {
   margin: 0 0 0.75rem;
   color: #555;
   line-height: 1.5;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
 .patients-col__list {
-  margin: 0;
-  padding-left: 1.25rem;
+  margin: 0 0 0.75rem;
+  padding-left: 0;
+  list-style: none;
   color: #444;
 }
 
 .patients-col__list li + li {
   margin-top: 0.35rem;
+}
+
+.patients-col__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font: inherit;
+}
+
+.patients-col__btn:hover {
+  background: #f0fdfa;
+  border-color: #99f6e4;
+}
+
+.patients-col__btn--active {
+  border-color: #0d9488;
+  background: #ccfbf1;
+  box-shadow: 0 0 0 1px #0d9488;
+}
+
+.patients-col__icon {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #0f766e;
+}
+
+.patients-col__btn--active .patients-col__icon {
+  color: #0f766e;
 }
