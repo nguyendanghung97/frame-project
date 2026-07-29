@@ -1,0 +1,13 @@
+# frame-common — shared library (`npm run` wrappers).
+
+default:
+    @just --list
+
+install:
+    npm install
+
+build:
+    npm run build
+
+watch:
+    npm run watch

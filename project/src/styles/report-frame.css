@@ -1,0 +1,50 @@
+.report-frame {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+}
+
+.report-frame__sidebar {
+  width: 14rem;
+  flex-shrink: 0;
+  padding: 1rem;
+  border-right: 1px solid #e5e5e5;
+  background: #fff;
+  overflow: auto;
+}
+
+.report-frame__content {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+.report-sidebar__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #666;
+}
+
+.report-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.report-sidebar__link {
+  display: block;
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #444;
+  padding: 0.25rem 0;
+}
+
+.report-sidebar__link--active {
+  font-weight: 600;
+  color: #111;
+}

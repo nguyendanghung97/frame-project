@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strict": false,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "composite": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "paths": {
+      "@common/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "src/**/*.json"
+  ]
+}

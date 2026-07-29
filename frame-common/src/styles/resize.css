@@ -1,0 +1,79 @@
+/* SectionWrapper resize — adapted from rjs-admin sectionwrapper.css */
+
+.frame-resizable-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  min-height: 0;
+  height: 100%;
+  --handle-size: 6px;
+  --handle-active-color: rgba(16, 179, 255, 0.771);
+  --handle-resize-color: rgba(16, 179, 255, 1);
+  --handle-background-color: #e8f4fc;
+  --handle-indicator-width: 2px;
+}
+
+.frame-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(var(--handle-size) + 1px);
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.frame-resizable-left .frame-resize-handle {
+  left: calc(var(--handle-size) / -2 - 1px);
+}
+
+.frame-resizable-right .frame-resize-handle {
+  right: calc(var(--handle-size) / -2 - 1px);
+}
+
+.frame-resizable-wrapper.frame-resizable-left {
+  padding-left: calc(var(--handle-size) + 1px);
+}
+
+.frame-resizable-wrapper.frame-resizable-left > .frame-section-wrapper {
+  border-radius: 10px 0 0 0;
+  border-right: none;
+}
+
+.frame-resizable-wrapper.frame-resizable-left .frame-resize-handle {
+  left: 0;
+  background: var(--handle-background-color);
+}
+
+.frame-resize-handle::after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  left: calc(var(--handle-size) / 2 - var(--handle-indicator-width) / 2);
+  width: calc(var(--handle-indicator-width) + 1px);
+  height: 90%;
+  background: transparent;
+  transition: background-color 0.5s ease;
+  border-radius: 10px;
+}
+
+.frame-resize-handle:hover::after,
+.frame-resize-handle:active::after {
+  background: var(--handle-active-color);
+}
+
+.frame-resizable-wrapper.resizing .frame-resize-handle::after {
+  left: 1px;
+  width: calc(var(--handle-size) - 1px);
+  background: var(--handle-resize-color);
+}
+
+.frame-resizable-wrapper.resizing {
+  user-select: none;
+}
+
+.frame-resizable-wrapper[style*="width"] {
+  flex-shrink: 0;
+  overflow: hidden;
+}
