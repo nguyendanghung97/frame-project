@@ -1,0 +1,495 @@
+/* Discussion panel — styles extracted from Discussion.tsx (style-preserving) */
+
+/* --- Date divider --- */
+.discussion-date_divider {
+  @apply flex items-center gap-3 mb-2.5 -mt-2;
+}
+.discussion-date_divider-line {
+  @apply flex-1 h-px bg-[#e8e8e8];
+}
+.discussion-date_divider-label {
+  @apply text-[0.6785rem] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap;
+}
+
+/* --- Avatar --- */
+.discussion-avatar {
+  @apply relative shrink-0;
+}
+.discussion-avatar-face {
+  @apply flex items-center justify-center rounded-lg overflow-hidden shrink-0 border border-[#C7BDB4];
+}
+.discussion-avatar-face--lg {
+  @apply w-10 h-10 relative z-10 border-2 border-[#F3FBFF];
+}
+.discussion-avatar-face--sm {
+  @apply w-7 h-7;
+}
+.discussion-avatar-img {
+  @apply w-full h-full object-cover;
+}
+.discussion-avatar-initials {
+  @apply text-[0.625rem] font-bold;
+}
+.discussion-avatar-ack {
+  @apply absolute -top-1 -left-1 bg-white rounded-full p-0.5 border border-gray-100 shadow-sm z-30;
+}
+.discussion-avatar-ack-icon {
+  @apply w-2.5 h-2.5 text-primary-base;
+}
+.discussion-avatar-overflow {
+  @apply w-7 h-7 rounded-[0.5rem] bg-[#f1f2f4] border border-[#C7BDB4] flex items-center justify-center text-[0.625rem] text-gray-500 font-bold relative z-10;
+}
+
+/* --- Comment input / composer --- */
+.discussion-input {
+  @apply relative flex flex-col w-full;
+}
+.discussion-input--reply {
+  @apply mt-2;
+}
+.discussion-input-row {
+  @apply flex gap-3 relative z-0;
+}
+.discussion-input-editor_wrap {
+  @apply flex-1 border-t border-border transition-all relative z-0 bg-white;
+}
+.discussion-input-textarea {
+  @apply w-full resize-none border-0 bg-transparent px-4 py-2 text-sm text-gray-800 outline-none placeholder:text-gray-400 leading-relaxed;
+}
+.discussion-input-toolbar {
+  @apply flex items-center gap-2 justify-between px-4 py-1 border-t border-gray-100 bg-slate-100;
+}
+.discussion-input-toolbar-left {
+  @apply flex items-center shrink-0;
+}
+.discussion-input-toolbar-right {
+  @apply flex items-center gap-2;
+}
+.discussion-input-format_btn {
+  @apply flex items-center justify-center p-1.5 rounded transition-colors;
+}
+.discussion-input-format_btn--on {
+  @apply bg-[#2563eb]/10 text-blue-600;
+}
+.discussion-input-format_btn--off {
+  @apply text-gray-400 hover:bg-gray-100 hover:text-gray-600;
+}
+.discussion-input-cancel_btn {
+  @apply hidden items-center justify-center p-1.5 rounded text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors;
+}
+.discussion-input-delete_btn {
+  @apply flex items-center justify-center p-1.5 rounded text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors;
+}
+.discussion-input-hint {
+  @apply text-xs font-medium line-clamp-1 break-all;
+}
+.discussion-input-hint--ok {
+  @apply text-gray-400;
+}
+.discussion-input-hint--warn {
+  @apply text-orange-500;
+}
+.discussion-input-hint--error {
+  @apply text-red-600;
+}
+.discussion-input-dismiss_btn {
+  @apply text-xs font-medium text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded hover:bg-gray-100 transition-colors;
+}
+.discussion-input-send_btn {
+  @apply text-xs font-medium text-white bg-[#2563eb] hover:bg-[#2563eb]/90 disabled:opacity-50 disabled:cursor-not-allowed px-2.5 py-1.5 rounded transition-colors flex items-center gap-1;
+}
+.discussion-input-send_spinner {
+  @apply w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin;
+}
+.discussion-input-send_icon {
+  @apply -rotate-45;
+}
+.discussion-input-icon {
+  @apply w-3.5 h-3.5;
+}
+
+/* --- Reply / edit banner --- */
+.discussion-item_banner {
+  @apply absolute left-1 right-1 bottom-full -mb-1.5 bg-white rounded-md px-3 py-1.5 border z-10 flex flex-col cursor-pointer hover:bg-slate-50 transition-colors overflow-hidden;
+}
+.discussion-item_banner--offset {
+  @apply ml-[3.25rem];
+}
+.discussion-item_banner--flush {
+  @apply mx-0;
+}
+.discussion-item_banner-row {
+  @apply flex items-center gap-2 w-full justify-between;
+}
+.discussion-item_banner-title {
+  @apply flex items-center gap-2 truncate;
+}
+.discussion-item_banner-label {
+  @apply text-[0.625rem] font-extrabold uppercase tracking-wider transition-colors whitespace-nowrap;
+}
+.discussion-item_banner-label--edit {
+  @apply text-secondary-base;
+}
+.discussion-item_banner-label--reply {
+  @apply text-slate-500;
+}
+.discussion-item_banner-name {
+  @apply text-xs font-bold text-slate-900 truncate;
+}
+.discussion-item_banner-close {
+  @apply flex items-center justify-center p-0.5 rounded-sm hover:bg-slate-200 text-slate-400 hover:text-red-500 transition-colors shrink-0;
+}
+.discussion-item_banner-close-icon {
+  @apply w-3.5 h-3.5 stroke-3;
+}
+.discussion-item_banner-preview {
+  @apply line-clamp-3 text-[0.6875rem] text-slate-500 leading-snug border-l-2 border-slate-300 pl-2 mt-0.5 [&>p]:m-0 max-w-none wrap-break-word overflow-hidden;
+}
+
+/* --- System / admin comment --- */
+.discussion-system {
+  @apply flex items-baseline gap-2 text-gray-500 text-[0.6875rem] italic px-0;
+}
+.discussion-system-time {
+  @apply tabular-nums opacity-70 shrink-0;
+}
+.discussion-system-name {
+  @apply overflow-hidden min-w-0 shrink-0;
+}
+.discussion-system-name-text {
+  @apply truncate opacity-90 text-[0.6875rem] font-bold leading-none italic text-inherit;
+}
+.discussion-system-body {
+  @apply [&>p]:m-0 font-medium min-w-0;
+}
+
+/* --- Reply item (NCS: name | text+edit | time) --- */
+.discussion-reply_item-container {
+  @apply text-xs text-gray-500 leading-relaxed rounded-sm transition-all duration-500;
+}
+.discussion-reply_item {
+  @apply flex-1 min-w-0 flex flex-col scroll-mt-12;
+}
+.discussion-reply_item-header {
+  @apply flex items-center gap-1.5 min-w-0;
+}
+.discussion-reply_item-content {
+  @apply -mt-0.75 flex items-start rounded-md border border-transparent;
+}
+.discussion-reply_item-is-editing {
+  @apply mt-0! py-0.5 px-2 bg-white border-[#C7BDB4]! hover:bg-gray-50 border-dashed cursor-pointer;
+}
+.discussion-reply_item-is-highlighted {
+  @apply mt-0! py-0.5 px-2 ring-2 ring-primary-base/20 border-primary-base! shadow-sm;
+}
+.discussion-reply_row {
+  @apply mt-0.5 flex items-baseline w-full gap-3 relative;
+}
+.discussion-reply_row--active {
+  @apply cursor-pointer;
+}
+.discussion-reply_name {
+  @apply w-20 shrink-0 min-w-0;
+}
+.discussion-reply_name-text {
+  @apply block w-full font-bold text-xs text-gray-900 truncate leading-5;
+}
+.discussion-reply_body {
+  @apply flex-1 min-w-0 flex items-start gap-2;
+}
+.discussion-reply_body-inner {
+  @apply min-w-0;
+}
+.discussion-reply_text {
+  @apply text-xs text-gray-800 wrap-break-word [&>p]:m-0 max-w-none leading-5;
+}
+.discussion-reply_text--editing {
+  @apply bg-white border-[#C7BDB4] border border-dashed rounded px-2;
+}
+.discussion-reply_text--highlighted {
+  @apply ring-2 ring-primary-base/20 border border-primary-base shadow-sm rounded px-2;
+}
+.discussion-reply_actions {
+  @apply flex items-center gap-1 shrink-0 h-5;
+}
+.discussion-reply_time_wrap {
+  @apply flex items-start gap-2 shrink-0 w-[3.125rem] justify-end leading-5;
+}
+.discussion-reply_time {
+  @apply tabular-nums text-gray-500 text-[0.6875rem] whitespace-nowrap;
+}
+
+/* --- Action icon buttons (shared) --- */
+.discussion-action_icon {
+  @apply p-0.5 rounded transition-colors inline-flex items-center align-middle;
+}
+.discussion-action_icon--spin {
+  @apply p-0.5 rounded text-primary animate-spin inline-flex items-center align-middle;
+}
+.discussion-action_icon--spin-muted {
+  @apply p-0.5 rounded text-foreground-muted animate-spin inline-flex items-center align-middle;
+}
+.discussion-action_icon--cancel {
+  @apply p-0.5 rounded text-foreground-muted hover:text-red-500 transition-colors inline-flex items-center align-middle;
+}
+.discussion-action_icon--retry {
+  @apply p-0.5 rounded text-red-500 hover:text-red-600 transition-colors inline-flex items-center align-middle;
+}
+.discussion-action_icon--edit {
+  @apply p-0.5 rounded text-foreground-muted hover:text-primary transition-colors inline-flex items-center align-middle;
+}
+.discussion-action_icon--edit-spaced {
+  @apply ml-2 p-0.5 rounded text-foreground-muted hover:text-primary transition-colors inline-flex items-center align-middle;
+}
+.discussion-action_icon--cancel-reply {
+  @apply text-foreground-muted p-0.5 rounded hover:text-red-500 transition-colors inline-flex items-center align-middle;
+}
+
+/* --- Top-level comment item --- */
+.discussion-comment {
+  @apply flex gap-3 relative;
+}
+.discussion-comment-thread {
+  @apply absolute left-5 top-10 w-[0.125rem] bg-gray-200;
+}
+.discussion-comment-thread--last-replying {
+  @apply bottom-[-3.75rem];
+}
+.discussion-comment-thread--last {
+  @apply bottom-[-1.25rem];
+}
+.discussion-comment-thread--next {
+  @apply bottom-[-2.5rem];
+}
+.discussion-item_container {
+  @apply flex-1 min-w-0 flex flex-col gap-1;
+}
+.discussion-comment_item-container {
+  @apply scroll-mt-12 flex flex-col gap-1;
+}
+.discussion-comment_item-header {
+  @apply flex items-center justify-between gap-10 px-0.5 w-full;
+}
+.discussion-comment_item-header-left {
+  @apply flex-1 flex items-center gap-2.5 overflow-hidden;
+}
+.discussion-comment_item-name {
+  @apply overflow-hidden shrink-0 min-w-0;
+}
+.discussion-comment_item-name-text {
+  @apply max-w-60 truncate font-bold text-sm text-gray-900;
+}
+.discussion-comment_item-time {
+  @apply text-sm text-gray-500 tabular-nums text-nowrap;
+}
+.discussion-comment_item-hide_replies {
+  @apply flex p-0.5 rounded-sm hover:bg-gray-100 text-secondary-base transition-colors cursor-pointer;
+}
+.discussion-comment_item-hide_replies-icon {
+  @apply w-3.5 h-3.5 stroke-[2.5];
+}
+.discussion-comment_item-actions {
+  @apply flex flex-row-reverse items-center gap-2 text-sm text-gray-500;
+}
+.discussion-comment_item-reply_btn {
+  @apply hover:text-blue-600 transition-colors cursor-pointer;
+}
+.discussion-comment_item-reply_btn--active {
+  @apply text-blue-600;
+}
+.discussion-comment_item-reply_btn--disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+.discussion-comment_item-ack_btn {
+  @apply transition-colors cursor-pointer disabled:cursor-not-allowed;
+}
+.discussion-comment_item-ack_btn--done {
+  @apply text-primary-base;
+}
+.discussion-comment_item-ack_btn--idle {
+  @apply text-gray-400 hover:text-primary-base;
+}
+.discussion-comment_item-ack_icon {
+  @apply w-4 h-4;
+}
+.discussion-comment_item-ack_icon--spin {
+  @apply w-4 h-4 animate-spin;
+}
+.discussion-comment_item-ack_status--done {
+  @apply text-primary-base;
+}
+.discussion-comment_item-ack_status--pending {
+  @apply text-gray-500;
+}
+.discussion-comment_item-content {
+  @apply rounded-md p-3 py-2 border border-border flex flex-col relative transition-all duration-300;
+}
+.discussion-comment_item-content--owner {
+  @apply bg-[#f3fbff];
+}
+.discussion-comment_item-content--reply {
+  @apply bg-gray-50;
+}
+.discussion-comment_item-content--default {
+  @apply bg-white;
+}
+.discussion-comment_item-content--active {
+  @apply cursor-pointer;
+}
+.discussion-is-replying {
+  @apply border-primary-base ring-2 ring-primary-base/20;
+}
+.discussion-is-editing {
+  @apply border-[#C7BDB4] border-dashed ring-2 ring-[#C7BDB4]/20;
+}
+.discussion-is-highlighted {
+  @apply ring-3 ring-primary-base/20 border-primary-base shadow-md;
+}
+.discussion-comment_item-body {
+  @apply flex items-start;
+}
+.discussion-comment_item-text {
+  @apply text-sm text-gray-800 wrap-break-word max-w-none flex-1 min-w-0 overflow-hidden leading-relaxed;
+}
+.discussion-comment_item-text--reply {
+  @apply text-xs!;
+}
+.discussion-comment_item-side_actions {
+  @apply flex flex-col gap-1 shrink-0 mt-0.5;
+}
+
+/* --- Collapsed replies --- */
+.discussion-reply_container {
+  @apply mt-0.25 flex flex-col gap-1.5 px-4;
+}
+.discussion-replies_collapsed {
+  @apply w-fit flex items-center gap-2 text-left;
+}
+.discussion-replies_collapsed-btn {
+  @apply flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer;
+}
+.discussion-replies_ack {
+  @apply flex items-center gap-2;
+}
+.discussion-replies_avatars {
+  @apply flex -space-x-1.5 overflow-hidden;
+}
+.discussion-replies_count {
+  @apply text-xs font-bold text-gray-900;
+}
+.discussion-replies_ack_count {
+  @apply text-xs font-bold text-gray-500;
+}
+.discussion-replies_divider {
+  @apply w-px h-3 bg-gray-300 mx-1;
+}
+
+/* --- Toolbar buttons (refresh / ack / close / mode) --- */
+.discussion-refresh_btn {
+  @apply hidden p-1.5 rounded-md hover:bg-gray-200 text-gray-500 transition-colors disabled:opacity-50 items-center gap-1.5;
+}
+.discussion-refresh_btn--visible {
+  @apply flex;
+}
+.discussion-refresh_btn-label {
+  @apply translate-y-0.25 text-[0.625rem] font-semibold uppercase tracking-wider;
+}
+.discussion-ack_toggle {
+  @apply shrink-0 flex items-center justify-center rounded transition-colors;
+}
+.discussion-ack_toggle--acked {
+  @apply text-primary-base font-bold;
+}
+.discussion-ack_toggle--idle {
+  @apply text-gray-500 font-semibold;
+}
+.discussion-ack_toggle-box {
+  @apply flex items-center justify-center w-4 h-4 transition-all shrink-0;
+}
+.discussion-ack_toggle-box--unchecked {
+  @apply rounded border border-gray-300 bg-white;
+}
+.discussion-ack_toggle-box--checked {
+  @apply rounded border bg-sky-600 border-sky-600 text-white;
+}
+.discussion-ack_toggle-box--acked {
+  @apply text-primary-base opacity-80;
+}
+.discussion-ack_toggle-check {
+  @apply w-3 h-3;
+}
+.discussion-ack_toggle-label {
+  @apply text-xs scale-90 leading-none uppercase ml-1.5;
+}
+.discussion-icon-spin {
+  @apply w-3.5 h-3.5 animate-spin;
+}
+.discussion-close_btn {
+  @apply p-1.5 py-1 rounded-md hover:bg-gray-200 text-gray-500 transition-colors disabled:opacity-50 flex items-center gap-1.5;
+}
+.discussion-close_btn-label {
+  @apply text-xs scale-90 font-bold uppercase tracking-wider opacity-80;
+}
+.discussion-extra_actions {
+  @apply flex items-center gap-0.5;
+}
+.discussion-extra_actions-divider {
+  @apply w-px h-3 bg-gray-200 mx-1;
+}
+.discussion-composer_actions {
+  @apply flex items-center shrink-0;
+}
+.discussion-composer_close_divider {
+  @apply mx-2 w-px h-3 bg-gray-300;
+}
+
+/* --- Panel shell --- */
+.discussion-root {
+  @apply overflow-hidden bg-slate-100 flex flex-col h-full;
+}
+.discussion-scroll {
+  @apply flex-1 p-4 overflow-y-auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.discussion-scroll::-webkit-scrollbar {
+  display: none;
+}
+.discussion-scroll--banner {
+  @apply mb-2;
+}
+.discussion-scroll-inner {
+  @apply flex flex-col justify-end min-h-full gap-4;
+}
+.discussion-empty {
+  @apply flex-1 flex flex-col items-center justify-center py-20;
+  animation: discussion-fade-in 0.3s ease-in-out;
+}
+@keyframes discussion-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.discussion-empty-icon_wrap {
+  @apply w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4;
+}
+.discussion-empty-icon {
+  @apply w-8 h-8 text-gray-300;
+}
+.discussion-empty-icon--spin {
+  @apply w-8 h-8 text-gray-300 animate-spin;
+}
+.discussion-empty-text {
+  @apply text-sm text-gray-400 text-center max-w-[15rem];
+}
+.discussion-timeline_item {
+  @apply last:mb-0;
+}
+.discussion-banner_spacer {
+  @apply -mt-4 shrink-0 transition-all duration-200;
+}
+.discussion-composer {
+  @apply flex gap-3 shrink-0;
+}
+.discussion-composer-inner {
+  @apply w-full;
+}

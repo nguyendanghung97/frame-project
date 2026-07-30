@@ -7,6 +7,12 @@
 @theme {
   --color-primary-soft: #e8f1ff;
   --color-border: #e5e7eb;
+  --color-primary-base: #0284c7;
+  --color-primary-surface: #e8f1ff;
+  --color-secondary-base: #d97706;
+  --color-background-base: #e8e8e8;
+  --color-foreground-muted: #9ca3af;
+  --color-primary: #0284c7;
 }
 
 @import '../../../frame-common/src/styles/index.css';

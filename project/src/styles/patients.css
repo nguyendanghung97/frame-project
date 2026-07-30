@@ -67,3 +67,23 @@
 .patients-col-btn-active .patients-col-icon {
   color: #0f766e;
 }
+
+.patients-col--discussion {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0.75rem 0.75rem 0;
+}
+
+.patients-col-text--compact {
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.patients-discussion {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid #e5e7eb;
+  margin: 0 -0.75rem;
+}

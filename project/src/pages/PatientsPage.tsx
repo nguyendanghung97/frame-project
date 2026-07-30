@@ -1,4 +1,5 @@
 import {
+  Discussion,
   PageModule,
   ThreeColumns,
   updateModuleState,
@@ -104,20 +105,28 @@ function PatientsMain() {
 function PatientsDetail() {
   const { pageParams } = usePageContext()
   const selected = pageParams.patient as string | undefined
+  const resourceId = selected
+    ? `patient-${selected.toLowerCase().replace(/\s+/g, '-')}`
+    : 'demo-entry-001'
 
   return (
-    <div className="patients-col">
-      <h3 className="patients-col-title">Detail</h3>
-      <p className="patients-col-text">
-        {selected ? (
-          <>
-            <UserIcon className="patients-col-icon" /> Selected via pageParams:{' '}
-            {selected}
-          </>
-        ) : (
-          'Right panel — pick a patient in main'
-        )}
-      </p>
+    <div className="patients-col patients-col--discussion">
+      {selected ? (
+        <p className="patients-col-text patients-col-text--compact">
+          <UserIcon className="patients-col-icon" /> {selected}
+        </p>
+      ) : (
+        <p className="patients-col-text patients-col-text--compact">
+          Pick a patient — demo thread below
+        </p>
+      )}
+      <div className="patients-discussion">
+        <Discussion
+          key={resourceId}
+          defaultResource="patient"
+          defaultResourceId={resourceId}
+        />
+      </div>
     </div>
   )
 }
@@ -130,7 +139,7 @@ export function PatientsPage() {
     <ThreeColumns
       title="Patients"
       minSidebarWidth={240}
-      minRightPanelWidth={280}
+      minRightPanelWidth={540}
       className="h-full overflow-hidden"
     >
       <PageModule sectionName="sidebar" className="h-full">
