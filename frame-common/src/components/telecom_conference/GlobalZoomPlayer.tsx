@@ -310,7 +310,8 @@ export function GlobalZoomPlayer({
             isInteracting={isDragging || isResizing !== null}
             showSecureGuestInvite={true}
             showLegacyGuestCallLink={false}
-            showModeSwitch={false}
+            showModeSwitch={true}
+            autoJoin
           />
         </div>
       </div>

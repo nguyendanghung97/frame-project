@@ -202,6 +202,8 @@ type VideoCallProps = {
   showModeSwitch?: boolean;
   /** Toggle GlobalZoomPlayer PiP via telecomConferenceStore. */
   showPipControl?: boolean;
+  /** Skip device preview UI and join as soon as audio is ready. */
+  autoJoin?: boolean;
 };
 
 const VideoCall = (props: VideoCallProps) => {
@@ -223,6 +225,7 @@ const VideoCall = (props: VideoCallProps) => {
     showLegacyGuestCallLink = false,
     showModeSwitch = true,
     showPipControl = true,
+    autoJoin = false,
   } = props;
 
   const isPipMode = useStore($telecomConferencePipEnabled);
@@ -274,7 +277,7 @@ const VideoCall = (props: VideoCallProps) => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [recordingStatus]);
-  const [isJoining, setIsJoining] = useState(false);
+  const [isJoining, setIsJoining] = useState(autoJoin);
   const [hasAudio, setHasAudio] = useState(false); // Start as false to wait for Preview
   const [hasVideo, setHasVideo] = useState(false); // Start as false to wait for Preview
   const [permissionDenied, setPermissionDenied] = useState(false);
@@ -285,6 +288,7 @@ const VideoCall = (props: VideoCallProps) => {
   const [inviteCopied, setInviteCopied] = useState(false);
   const callContainerRef = useRef<HTMLElement | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const autoJoinedRef = useRef(false);
 
   const setRecords = props.setRecords;
   const processedSignatures = useRef<Map<string, number>>(new Map());
@@ -873,6 +877,20 @@ const VideoCall = (props: VideoCallProps) => {
     }
   };
 
+  useEffect(() => {
+    if (permissionDenied && isJoining && autoJoin) {
+      setIsJoining(false);
+    }
+  }, [permissionDenied, isJoining, autoJoin]);
+
+  useEffect(() => {
+    if (!inCall && autoJoin && !autoJoinedRef.current && hasAudio) {
+      console.log('[VideoCall] Devices ready — auto-joining…');
+      autoJoinedRef.current = true;
+      void startCall();
+    }
+  }, [inCall, autoJoin, hasAudio]);
+
   const leaveCall = async () => {
     try {
       console.log('[VideoCall] Hard Leave: Ending physical session.');
@@ -915,7 +933,7 @@ const VideoCall = (props: VideoCallProps) => {
 
   /** Stub — open call in popup window. */
   const switchZoomToPopup = useCallback(() => {
-    window.alert('Switch to popup is not implemented yet');
+    window.alert('Popup window — not implemented yet');
   }, []);
 
   /** Stub — return call to inline tab. */
@@ -936,7 +954,6 @@ const VideoCall = (props: VideoCallProps) => {
       {!inCall ? (
         <div className="flex-1 w-full h-full mx-auto relative flex items-center justify-center">
           <Preview
-            // No key - let Preview manage its own lifecycle
             init={init}
             setIsVideoMuted={setIsVideoMuted}
             setIsAudioMuted={setIsAudioMuted}
@@ -949,42 +966,43 @@ const VideoCall = (props: VideoCallProps) => {
             onDeviceIdsChange={onPreviewDeviceIdsChange}
             isInteracting={isInteracting}
           >
+            {/* Under autoJoin the overlay covers this; keep button for manual join path */}
             <button
-              disabled={isJoining || !hasAudio || permissionDenied}
+              disabled={isJoining || !hasAudio || permissionDenied || autoJoin}
               className={cn(
                 'w-full py-2 bg-linear-to-r from-blue-600 to-blue-500 text-white rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2',
-                isJoining || !hasAudio || permissionDenied
+                isJoining || !hasAudio || permissionDenied || autoJoin
                   ? 'opacity-70 cursor-not-allowed grayscale'
                   : 'hover:scale-[1.02] active:scale-95',
               )}
               onClick={startCall}
             >
-              {isJoining ? (
+              {isJoining || autoJoin ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span>Joining...</span>
                 </>
               ) : (
                 permissionDenied ? (
-                  "(Permission Denied)"
+                  '(Permission Denied)'
                 ) : !hasAudio ? (
-                  "(No audio device)"
+                  '(No audio device)'
                 ) : !hasVideo ? (
-                  "(No camera device)"
+                  '(No camera device)'
                 ) : (
-                  "Join Meeting"
+                  'Join Meeting'
                 )
               )}
             </button>
           </Preview>
 
-          {/* Simple Joining Overlay (matches Preview style) */}
+          {/* Overlay only — preview camera stays visible underneath */}
           {!inCall && isJoining && (
             <div className="absolute inset-0 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm z-50 text-white gap-3 transition-all">
-                <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
-                    <span className="text-sm font-bold tracking-wide uppercase">Joining Meeting...</span>
-                </div>
+              <div className="flex flex-col items-center gap-4">
+                <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+                <span className="text-sm font-bold tracking-wide uppercase">Joining Meeting...</span>
+              </div>
             </div>
           )}
         </div>
@@ -1123,7 +1141,8 @@ const VideoCall = (props: VideoCallProps) => {
                 </button>
               )}
 
-              {showModeSwitch && inCall && (
+              {/* Return-to-tab: hide until popup mode is implemented */}
+              {false && showModeSwitch && inCall && (
                 <button
                   type="button"
                   onClick={switchZoomToInline}

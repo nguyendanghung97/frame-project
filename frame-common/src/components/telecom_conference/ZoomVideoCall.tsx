@@ -25,6 +25,8 @@ export interface ZoomVideoCallProps {
   showSecureGuestInvite?: boolean
   showLegacyGuestCallLink?: boolean
   showModeSwitch?: boolean
+  /** Skip Zoom preview and join automatically when devices are ready. */
+  autoJoin?: boolean
   /** Fetch JWT when signature prop is empty. */
   prepareSession?: () => Promise<PrepareZoomSessionResult>
 }
@@ -48,6 +50,7 @@ export default function ZoomVideoCall({
   showSecureGuestInvite = true,
   showLegacyGuestCallLink = false,
   showModeSwitch = true,
+  autoJoin = false,
   prepareSession,
 }: ZoomVideoCallProps) {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error' | 'idle'>('loading')
@@ -242,6 +245,7 @@ export default function ZoomVideoCall({
             showSecureGuestInvite={showSecureGuestInvite}
             showLegacyGuestCallLink={showLegacyGuestCallLink}
             showModeSwitch={showModeSwitch}
+            autoJoin={autoJoin}
           />
 
           <div className="hidden absolute top-4 right-4 z-10 pointer-events-none">
