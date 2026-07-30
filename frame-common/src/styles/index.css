@@ -1,3 +1,4 @@
 /* frame-common styles entry */
 @import './layouts.css';
 @import './resize.css';
+@import './video-call.css';

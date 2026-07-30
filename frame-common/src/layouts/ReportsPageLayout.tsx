@@ -1,4 +1,4 @@
-import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame-layout';
+import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame_layout';
 
 export interface ReportsPageLayoutProps extends PageLayoutProps {
   showHeader?: boolean;

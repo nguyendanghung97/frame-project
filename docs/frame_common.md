@@ -8,10 +8,11 @@ Tham chiếu cấu trúc tương tự: `ncs-common` trong NCS frontend (Vite lib
 
 | Doc | Nội dung |
 |-----|----------|
-| [`frame-layout.md`](./frame-layout.md) | Primitive layout (`PageFrame`, `PageLayout`, sections) + layouts sẵn có |
-| [`app-state.md`](./app-state.md) | `updatePageParams` / `updateModuleState`, URL hash/query, đọc qua `usePageContext` |
-| [`app-state-flow.md`](./app-state-flow.md) | Luồng kết nối store ↔ `PageFrame` ↔ pages |
-| [`convention/001.naming-convention.md`](./convention/001.naming-convention.md) | Naming (từ rjs-frame) |
+| [`frame_layout.md`](./frame_layout.md) | Primitive layout (`PageFrame`, `PageLayout`, sections) + layouts sẵn có |
+| [`app_state.md`](./app_state.md) | `updatePageParams` / `updateModuleState`, URL hash/query, đọc qua `usePageContext` |
+| [`app_state_flow.md`](./app_state_flow.md) | Luồng kết nối store ↔ `PageFrame` ↔ pages |
+| [`zoom.md`](./zoom.md) | Zoom UI + `telecomConferenceStore` (nanostores cho GlobalZoomPlayer) |
+| [`convention/001.naming_convention.md`](./convention/001.naming_convention.md) | Naming (từ rjs-frame) |
 
 ## Vai trò
 
@@ -31,14 +32,14 @@ frame-common/
 ├── vite.config.ts        # lib mode + vite-plugin-dts
 ├── tsconfig.json
 └── src/
-    ├── index.ts          # public API: frame-layout + layouts
-    ├── frame-layout/     # PageFrame, store, urlUtils, contexts
+    ├── index.ts          # public API: frame_layout + layouts
+    ├── frame_layout/     # PageFrame, store, urlUtils, contexts
     ├── layouts/          # ThreeColumns, TwoColumns*, ReportsPageLayout
     ├── styles/           # layouts.css, resize.css — app import từ src
     └── vite-env.d.ts
 ```
 
-Public API chỉ export những gì re-export từ `src/index.ts` (qua `frame-layout` + `layouts`).
+Public API chỉ export những gì re-export từ `src/index.ts` (qua `frame_layout` + `layouts`).
 
 ## Build & phát triển
 
@@ -116,7 +117,7 @@ import {
 
 - **Ghi:** `updatePageParams` / `updateModuleState` (store).
 - **Đọc UI:** `usePageContext().pageParams` (và `moduleState`).
-- Chi tiết + URL hash: [`app-state.md`](./app-state.md).
+- Chi tiết + URL hash: [`app_state.md`](./app_state.md).
 
 ### 5. Khi nào cần `frame-common` build?
 
@@ -134,7 +135,7 @@ cd ../project && npm run dev       # dùng src qua alias
 ## Thêm code vào lib
 
 1. Tạo module dưới `src/` (ví dụ layout mới trong `src/layouts/`).
-2. Re-export từ barrel (`layouts/index.ts` hoặc `frame-layout/index.ts`) — đã được `src/index.ts` export.
+2. Re-export từ barrel (`layouts/index.ts` hoặc `frame_layout/index.ts`) — đã được `src/index.ts` export.
 3. App `project` (alias) nhận thay đổi qua HMR — không cần build lib.
 4. Tuỳ chọn: `npm run build` trong `frame-common` để check type / emit `dist`.
 
@@ -160,4 +161,4 @@ Hiện external sẵn: `react`, `react-dom`, `react/jsx-runtime`, `react-router`
 - [ ] App import CSS từ `../../../frame-common/src/styles/index.css`
 - [ ] App cung cấp `react` / `react-dom` / `react-router-dom`
 - [ ] Route cha dùng `PageFrame`; page fill layout bằng `PageModule`
-- [ ] State lên URL → `updatePageParams` ([`app-state.md`](./app-state.md))
+- [ ] State lên URL → `updatePageParams` ([`app_state.md`](./app_state.md))

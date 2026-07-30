@@ -1,0 +1,146 @@
+.conference-setup {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  padding: 1.75rem 1.5rem 2.5rem;
+  background:
+    radial-gradient(120% 80% at 10% 0%, #e8f4fc 0%, transparent 55%),
+    radial-gradient(90% 70% at 100% 10%, #eef2ff 0%, transparent 50%),
+    #f7f7f8;
+}
+
+.conference-setup-header {
+  max-width: 40rem;
+  margin-bottom: 1.5rem;
+}
+
+.conference-setup-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #12141a;
+}
+
+.conference-setup-lead {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #5a6170;
+}
+
+.conference-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  max-width: 44rem;
+  padding: 1.25rem 1.35rem 1.35rem;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #e2e6ee;
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 40px rgba(18, 20, 26, 0.06);
+}
+
+.conference-form-simple {
+  grid-template-columns: 1fr;
+  max-width: 36rem;
+}
+
+.conference-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.conference-field-wide {
+  grid-column: 1 / -1;
+}
+
+.conference-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.conference-input,
+.conference-textarea {
+  width: 100%;
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d5dae3;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #12141a;
+  font: inherit;
+  outline: none;
+}
+
+.conference-input:focus,
+.conference-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+.conference-textarea {
+  resize: vertical;
+  min-height: 7rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.conference-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.875rem;
+}
+
+.conference-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.conference-submit {
+  appearance: none;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.7rem 1.15rem;
+  background: #1d4ed8;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.conference-submit:hover:not(:disabled) {
+  background: #1e40af;
+}
+
+.conference-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.conference-call {
+  height: 100%;
+  min-height: 0;
+  background: #090e1a;
+}
+
+.conference-inline-target {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 720px) {
+  .conference-form {
+    grid-template-columns: 1fr;
+  }
+}

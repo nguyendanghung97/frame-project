@@ -2,9 +2,9 @@
 
 Store trong `frame-common` (port từ `rjs-frame`, **không** nanostores). Quản lý `pageParams`, `pageSearch`, `moduleState` và đồng bộ URL.
 
-Nguồn: `frame-common/src/frame-layout/stores/appStateStore.ts` + `utils/urlUtils.ts`.
+Nguồn: `frame-common/src/frame_layout/stores/appStateStore.ts` + `utils/urlUtils.ts`.
 
-**Luồng kết nối store ↔ pages:** [`app-state-flow.md`](./app-state-flow.md) (`PageFrame` là cầu nối React).
+**Luồng kết nối store ↔ pages:** [`app_state_flow.md`](./app_state_flow.md) (`PageFrame` là cầu nối React).
 
 ## Nguyên tắc: ghi store / đọc context
 

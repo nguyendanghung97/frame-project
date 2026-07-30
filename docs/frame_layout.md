@@ -1,11 +1,11 @@
-# Page layout system (`frame-layout`)
+# Page layout system (`frame_layout`)
 
 Hệ thống bố cục trang của `frame-common`, tách từ `rjs-admin` **không phụ thuộc** `rjs-admin` / `rjs-frame`.
 
-Layouts sẵn có (`ThreeColumns`, `TwoColumnsWithRightPanel`, …) nằm ở `frame-common/src/layouts/` và **build trên** các primitive trong `frame-common/src/frame-layout/`.
+Layouts sẵn có (`ThreeColumns`, `TwoColumnsWithRightPanel`, …) nằm ở `frame-common/src/layouts/` và **build trên** các primitive trong `frame-common/src/frame_layout/`.
 
-App state / URL (`updatePageParams`, …): [`docs/app-state.md`](./app-state.md).  
-Luồng store ↔ `PageFrame` ↔ pages: [`docs/app-state-flow.md`](./app-state-flow.md).
+App state / URL (`updatePageParams`, …): [`docs/app_state.md`](./app_state.md).  
+Luồng store ↔ `PageFrame` ↔ pages: [`docs/app_state_flow.md`](./app_state_flow.md).
 
 ## Ý tưởng
 
@@ -37,7 +37,7 @@ PageFrame (PageContext — đọc pageParams / moduleState)
 | **`PageModule`** | Nội dung page gắn vào một section (`sectionName` bắt buộc). |
 
 Helpers: `cn`, `matchPageParams`, `usePageContext` (đọc), `useLayoutContext`.  
-Mutations / URL: xem [`app-state.md`](./app-state.md) — **không** gắn lên `usePageContext`.
+Mutations / URL: xem [`app_state.md`](./app_state.md) — **không** gắn lên `usePageContext`.
 
 ## Cách build một layout mới
 
@@ -51,7 +51,7 @@ import {
   PageSection,
   SectionWrapper,
   type PageLayoutProps,
-} from '../frame-layout'
+} from '../frame_layout'
 
 export interface MyTwoColProps extends PageLayoutProps {
   minSidebarWidth?: number
@@ -69,10 +69,10 @@ export class MyTwoCol extends PageLayout<MyTwoColProps> {
           minWidth={minSidebarWidth}
           resizable="right"
         >
-          <PageSection name="sidebar" className="frame-section frame-section--sidebar" />
+          <PageSection name="sidebar" className="frame-section frame-section-sidebar" />
         </SectionWrapper>
 
-        <SectionWrapper tag="main" className="frame-layout-col frame-layout-col--main">
+        <SectionWrapper tag="main" className="frame-layout-col frame-layout-col-main">
           <PageSection name="main" className="frame-section" />
         </SectionWrapper>
       </div>
@@ -136,7 +136,7 @@ class MainFrameInner extends PageFrame {
     return (
       <div className="app-frame">
         <header>…</header>
-        <div className="app-frame__body">
+        <div className="app-frame-body">
           <Outlet />
         </div>
       </div>
@@ -225,7 +225,7 @@ export function HomePage() {
 |--------|----------|
 | `ThreeColumns` | `sidebar`, `main`, `rightPanel` |
 | `TwoColumnsWithRightPanel` | `main`, `rightPanel` |
-| `TwoColumnsWithSideBar` | `sidebar` *(có thể có `condition`)*, `main` |
+| `TwoColumnsWithSidebar` | `sidebar` *(có thể có `condition`)*, `main` |
 | `TwoColumnsWithHeader` | `header`, `sidebar`, `main` |
 | `ReportsPageLayout` | `mainHeader` *(nếu `showHeader`)*, `main`, `filterPanel` *(nếu `showFilterPanel` + page param)* |
 
@@ -236,13 +236,13 @@ export function HomePage() {
 - [ ] Vite alias `frame-common` → `../frame-common/src` (không cần rebuild dist khi dev)?
 - [ ] Mọi child có `sectionName` khớp slot?
 - [ ] Cột xếp dọc? → thiếu CSS flex (`frame-layout-row`) — kiểm tra import CSS.
-- [ ] Sidebar / filter không hiện? → kiểm tra `condition` và `pageParams` ([`app-state.md`](./app-state.md)).
+- [ ] Sidebar / filter không hiện? → kiểm tra `condition` và `pageParams` ([`app_state.md`](./app_state.md)).
 - [ ] Reload mất selection? → state đó phải nằm trong `pageParams` / hash, không phải `moduleState`.
 
 ## Cấu trúc folder
 
 ```
-frame-common/src/frame-layout/
+frame-common/src/frame_layout/
   components/
     PageFrame.tsx
     PageLayout.tsx
@@ -254,10 +254,10 @@ frame-common/src/frame-layout/
     appStateStore.ts
   utils/
     urlUtils.ts
-  contexts.tsx
+  contexts.ts
   matchPageParams.ts
   cn.ts / types.ts
   index.ts
 ```
 
-Tài liệu liên quan: [`frame-common.md`](./frame-common.md) · [`app-state.md`](./app-state.md) · [`app-state-flow.md`](./app-state-flow.md).
+Tài liệu liên quan: [`frame_common.md`](./frame_common.md) · [`app_state.md`](./app_state.md) · [`app_state_flow.md`](./app_state_flow.md).

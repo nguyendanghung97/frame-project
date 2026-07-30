@@ -1,4 +1,4 @@
-import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame-layout'
+import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame_layout'
 
 export interface ThreeColumnsProps extends PageLayoutProps {
   sidebarWidth?: number
@@ -22,11 +22,11 @@ export class ThreeColumns extends PageLayout<ThreeColumnsProps> {
         >
           <PageSection
             name="sidebar"
-            className="frame-section frame-section--sidebar"
+            className="frame-section frame-section-sidebar"
           />
         </SectionWrapper>
 
-        <SectionWrapper tag="main" className="frame-layout-col frame-layout-col--main">
+        <SectionWrapper tag="main" className="frame-layout-col frame-layout-col-main">
           <PageSection name="main" className="frame-section" />
         </SectionWrapper>
 
@@ -34,11 +34,11 @@ export class ThreeColumns extends PageLayout<ThreeColumnsProps> {
           minWidth={minRightPanelWidth}
           tag="aside"
           resizable="left"
-          className="frame-layout-col frame-layout-col--aside"
+          className="frame-layout-col frame-layout-col-aside"
         >
           <PageSection
             name="rightPanel"
-            className="frame-section frame-section--right"
+            className="frame-section frame-section-right"
           />
         </SectionWrapper>
       </div>

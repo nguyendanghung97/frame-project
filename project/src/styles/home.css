@@ -2,29 +2,29 @@
   padding: 0rem 0rem;
 }
 
-.home-layout__main,
-.home-layout__aside {
+.home-layout-main,
+.home-layout-aside {
   padding: 1rem;
 }
 
-.home-main__title,
-.home-aside__title {
+.home-main-title,
+.home-aside-title {
   margin: 0 0 0.5rem;
   font-size: 1.125rem;
 }
 
-.home-main__text {
+.home-main-text {
   margin: 0;
   color: #555;
   line-height: 1.5;
 }
 
-.home-aside__list {
+.home-aside-list {
   margin: 0;
   padding-left: 1.25rem;
   color: #444;
 }
 
-.home-aside__list li + li {
+.home-aside-list li + li {
   margin-top: 0.35rem;
 }

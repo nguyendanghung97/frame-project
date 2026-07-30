@@ -4,13 +4,13 @@
   background: #fafcfb;
 }
 
-.patients-col__title {
+.patients-col-title {
   margin: 0 0 0.5rem;
   font-size: 1.125rem;
   color: #0f766e;
 }
 
-.patients-col__text {
+.patients-col-text {
   margin: 0 0 0.75rem;
   color: #555;
   line-height: 1.5;
@@ -20,18 +20,18 @@
   gap: 0.35rem;
 }
 
-.patients-col__list {
+.patients-col-list {
   margin: 0 0 0.75rem;
   padding-left: 0;
   list-style: none;
   color: #444;
 }
 
-.patients-col__list li + li {
+.patients-col-list li + li {
   margin-top: 0.35rem;
 }
 
-.patients-col__btn {
+.patients-col-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -46,24 +46,24 @@
   font: inherit;
 }
 
-.patients-col__btn:hover {
+.patients-col-btn:hover {
   background: #f0fdfa;
   border-color: #99f6e4;
 }
 
-.patients-col__btn--active {
+.patients-col-btn-active {
   border-color: #0d9488;
   background: #ccfbf1;
   box-shadow: 0 0 0 1px #0d9488;
 }
 
-.patients-col__icon {
+.patients-col-icon {
   flex-shrink: 0;
   width: 1.1rem;
   height: 1.1rem;
   color: #0f766e;
 }
 
-.patients-col__btn--active .patients-col__icon {
+.patients-col-btn-active .patients-col-icon {
   color: #0f766e;
 }

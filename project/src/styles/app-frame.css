@@ -5,18 +5,18 @@
   min-height: 0;
 }
 
-.app-frame__header {
+.app-frame-header {
   flex-shrink: 0;
 }
 
-.app-frame__body {
+.app-frame-body {
   flex: 1;
   display: flex;
   overflow: hidden;
   min-height: 0;
 }
 
-.app-frame__body > * {
+.app-frame-body > * {
   flex: 1;
   width: 100%;
   min-width: 0;

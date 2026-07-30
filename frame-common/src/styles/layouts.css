@@ -19,11 +19,11 @@
   height: 100%;
 }
 
-.frame-layout-col--main {
+.frame-layout-col-main {
   z-index: 40;
 }
 
-.frame-layout-col--aside {
+.frame-layout-col-aside {
   flex: 0 0 auto;
 }
 
@@ -37,11 +37,11 @@
   background: #fff;
 }
 
-.frame-section--sidebar {
+.frame-section-sidebar {
   border-right: 2px solid #0d9488;
 }
 
-.frame-section--right {
+.frame-section-right {
   width: 100%;
   overflow: auto;
   border-left: 2px solid #0d9488;

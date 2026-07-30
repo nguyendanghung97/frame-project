@@ -7,24 +7,24 @@
   background: #fff;
 }
 
-.header__brand {
+.header-brand {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-.header__nav {
+.header-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
 
-.header__link {
+.header-link {
   text-decoration: none;
   font-size: 0.9rem;
   color: #555;
 }
 
-.header__link--active {
+.header-link-active {
   color: #111;
   font-weight: 600;
 }

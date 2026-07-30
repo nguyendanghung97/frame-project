@@ -1,13 +1,13 @@
-import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame-layout';
+import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame_layout';
 
-export interface TwoColumnsWithSideBarLayoutProps extends PageLayoutProps {
+export interface TwoColumnsWithSidebarLayoutProps extends PageLayoutProps {
   sidebarWidth?: number;
   minSidebarWidth?: number;
 }
 
-export class TwoColumnsWithSideBar extends PageLayout<TwoColumnsWithSideBarLayoutProps> {
+export class TwoColumnsWithSidebar extends PageLayout<TwoColumnsWithSidebarLayoutProps> {
   renderContent() {
-    const { className, sidebarWidth, minSidebarWidth } = this.props as TwoColumnsWithSideBarLayoutProps;
+    const { className, sidebarWidth, minSidebarWidth } = this.props as TwoColumnsWithSidebarLayoutProps;
 
     return (
       <div className={cn('flex-1 flex overflow-y-auto border-t border-border', className)}>

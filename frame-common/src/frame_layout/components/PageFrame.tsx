@@ -28,7 +28,7 @@ interface PageFrameState {
 
 /**
  * App chrome provider — supplies PageContext for SectionWrapper / PageModule.
- * Syncs pageParams / pageSearch / moduleState from frame-layout appStateStore.
+ * Syncs pageParams / pageSearch / moduleState from frame_layout appStateStore.
  * URL: pageParams ↔ hash, pageSearch ↔ query (see urlUtils).
  */
 export abstract class PageFrame<

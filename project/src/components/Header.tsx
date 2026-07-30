@@ -1,21 +1,28 @@
 import { NavLink } from 'react-router-dom'
+import { buildUrlFragments, usePageContext } from 'frame-common'
 
 const links = [
   { to: '/app/home', label: 'Home' },
   { to: '/app/patients', label: 'Patients' },
+  { to: '/app/conference', label: 'Conference' },
 ]
 
 export function Header() {
+  const { pageParams } = usePageContext()
+  // RR `location.hash` stays stale after `updatePageParams` (history.replaceState outside RR).
+  // Build hash from pageParams so tab switches keep `#signature:…`, etc.
+  const hash = buildUrlFragments(pageParams)
+
   return (
     <header className="header">
-      <div className="header__brand">frame-project</div>
-      <nav className="header__nav">
+      <div className="header-brand">frame-project</div>
+      <nav className="header-nav">
         {links.map((link) => (
           <NavLink
             key={link.to}
-            to={link.to}
+            to={{ pathname: link.to, hash: hash || undefined }}
             className={({ isActive }) =>
-              isActive ? 'header__link header__link--active' : 'header__link'
+              isActive ? 'header-link header-link-active' : 'header-link'
             }
           >
             {link.label}

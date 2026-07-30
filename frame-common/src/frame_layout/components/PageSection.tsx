@@ -18,7 +18,7 @@ export const PageSection = (props: PageSectionProps) => {
 
   if (!layoutContext) {
     return (
-      <div className="page-section page-section--error">
+      <div className="page-section page-section-error">
         ERROR: PageSection [{sectionName}] must be rendered within a PageLayout
       </div>
     )

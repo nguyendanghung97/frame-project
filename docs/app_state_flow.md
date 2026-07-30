@@ -1,8 +1,8 @@
 # Luồng kết nối: `appStateStore` ↔ pages
 
-Doc này chỉ ra **điểm nối** để API trong `frame-common/src/frame-layout/stores/appStateStore.ts` tương tác được với các page trong app.
+Doc này chỉ ra **điểm nối** để API trong `frame-common/src/frame_layout/stores/appStateStore.ts` tương tác được với các page trong app.
 
-Chi tiết API / URL: [`app-state.md`](./app-state.md). Layout primitives: [`frame-layout.md`](./frame-layout.md).
+Chi tiết API / URL: [`app_state.md`](./app_state.md). Layout primitives: [`frame_layout.md`](./frame_layout.md).
 
 ## Kết luận ngắn
 
@@ -53,10 +53,10 @@ Không có `PageFrame` ở route cha → ghi URL vẫn chạy được, nhưng U
 
 | Lớp | File | Vai trò |
 |-----|------|---------|
-| Store | `frame-layout/stores/appStateStore.ts` | Giữ state, mutation API, `emit` listeners |
-| URL | `frame-layout/utils/urlUtils.ts` | `pageParams` ↔ hash, `pageSearch` ↔ query |
-| Bridge | `frame-layout/components/PageFrame.tsx` | Subscribe store + browser nav → `PageContext` |
-| Context | `frame-layout/contexts.tsx` | Kiểu snapshot đọc + `usePageContext` |
+| Store | `frame_layout/stores/appStateStore.ts` | Giữ state, mutation API, `emit` listeners |
+| URL | `frame_layout/utils/urlUtils.ts` | `pageParams` ↔ hash, `pageSearch` ↔ query |
+| Bridge | `frame_layout/components/PageFrame.tsx` | Subscribe store + browser nav → `PageContext` |
+| Context | `frame_layout/contexts.ts` | Kiểu snapshot đọc + `usePageContext` |
 | Layout | `layouts/*` + `SectionWrapper` | Đọc `pageParams` cho `condition` |
 | App chrome | `project/src/frame.tsx` (`MainFrame`) | Subclass `PageFrame`, bọc `<Outlet />` |
 | Page | `project/src/pages/*` | Ghi store + đọc context |
@@ -137,7 +137,7 @@ class MainFrameInner extends PageFrame {
     return (
       <div className="app-frame">
         <header>…</header>
-        <div className="app-frame__body">
+        <div className="app-frame-body">
           <Outlet />   {/* pages phải nằm đây */}
         </div>
       </div>
@@ -174,6 +174,6 @@ Mutation **không** đi qua `PageFrame` — page gọi thẳng `appStateStore`; 
 
 ## Liên quan
 
-- [`app-state.md`](./app-state.md) — API, hash format, khi nào dùng `moduleState`
-- [`frame-layout.md`](./frame-layout.md) — `PageFrame` / layout / `condition`
-- [`frame-common.md`](./frame-common.md) — build & import lib
+- [`app_state.md`](./app_state.md) — API, hash format, khi nào dùng `moduleState`
+- [`frame_layout.md`](./frame_layout.md) — `PageFrame` / layout / `condition`
+- [`frame_common.md`](./frame_common.md) — build & import lib

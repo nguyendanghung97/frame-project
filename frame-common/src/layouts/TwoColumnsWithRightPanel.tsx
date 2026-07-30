@@ -1,4 +1,4 @@
-import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame-layout'
+import { cn, PageLayout, PageSection, SectionWrapper, type PageLayoutProps } from '../frame_layout'
 
 export interface TwoColumnsWithRightPanelLayoutProps extends PageLayoutProps {
   minRightPanelWidth?: number
@@ -12,7 +12,7 @@ export class TwoColumnsWithRightPanel extends PageLayout<TwoColumnsWithRightPane
 
     return (
       <div className={cn('frame-layout-row', className)}>
-        <SectionWrapper tag="main" className="frame-layout-col frame-layout-col--main">
+        <SectionWrapper tag="main" className="frame-layout-col frame-layout-col-main">
           <PageSection name="main" className="frame-section" />
         </SectionWrapper>
 
@@ -20,9 +20,9 @@ export class TwoColumnsWithRightPanel extends PageLayout<TwoColumnsWithRightPane
           minWidth={minRightPanelWidth}
           tag="aside"
           resizable="left"
-          className="frame-layout-col frame-layout-col--aside"
+          className="frame-layout-col frame-layout-col-aside"
         >
-          <PageSection name="rightPanel" className="frame-section frame-section--right" />
+          <PageSection name="rightPanel" className="frame-section frame-section-right" />
         </SectionWrapper>
       </div>
     )

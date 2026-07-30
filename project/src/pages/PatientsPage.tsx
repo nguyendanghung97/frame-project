@@ -33,11 +33,11 @@ function PatientsFilters() {
 
   return (
     <div className="patients-col">
-      <h3 className="patients-col__title">Filters</h3>
-      <p className="patients-col__text">
+      <h3 className="patients-col-title">Filters</h3>
+      <p className="patients-col-text">
         Sort via <code>updateModuleState</code> (not in URL — lost on reload)
       </p>
-      <label className="patients-col__text">
+      <label className="patients-col-text">
         Sort{' '}
         <select
           value={sort}
@@ -64,25 +64,25 @@ function PatientsMain() {
 
   return (
     <div className="patients-col">
-      <h3 className="patients-col__title">Patients</h3>
-      <p className="patients-col__text">
+      <h3 className="patients-col-title">Patients</h3>
+      <p className="patients-col-text">
         HMR check — teal styles + user icon (no <code>frame-common</code> build)
       </p>
-      <ul className="patients-col__list">
+      <ul className="patients-col-list">
         {names.map((name) => (
           <li key={name}>
             <button
               type="button"
               className={
                 selected === name
-                  ? 'patients-col__btn patients-col__btn--active'
-                  : 'patients-col__btn'
+                  ? 'patients-col-btn patients-col-btn-active'
+                  : 'patients-col-btn'
               }
               onClick={() => {
                 updatePageParams({ patient: name })
               }}
             >
-              <UserIcon className="patients-col__icon" />
+              <UserIcon className="patients-col-icon" />
               <span>{name}</span>
             </button>
           </li>
@@ -90,7 +90,7 @@ function PatientsMain() {
       </ul>
       <button
         type="button"
-        className="patients-col__btn"
+        className="patients-col-btn"
         onClick={() => {
           updatePageParams({}, ['patient'])
         }}
@@ -107,11 +107,11 @@ function PatientsDetail() {
 
   return (
     <div className="patients-col">
-      <h3 className="patients-col__title">Detail</h3>
-      <p className="patients-col__text">
+      <h3 className="patients-col-title">Detail</h3>
+      <p className="patients-col-text">
         {selected ? (
           <>
-            <UserIcon className="patients-col__icon" /> Selected via pageParams:{' '}
+            <UserIcon className="patients-col-icon" /> Selected via pageParams:{' '}
             {selected}
           </>
         ) : (

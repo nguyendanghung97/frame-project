@@ -1,0 +1,59 @@
+/* Zoom Video Absolute Cover - edge-to-edge preview / call video */
+
+.zoom-video-wrapper {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+video-player-container {
+  /* Force 16:9 to prevent Zoom's internal black bars */
+  aspect-ratio: 16 / 9 !important;
+
+  /* Absolute centering trick */
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+
+  /* Universal Cover Logic */
+  min-width: 100% !important;
+  min-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+
+  display: block !important;
+}
+
+video-player {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+video-player canvas,
+video-player video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.select-zoom-preview {
+  background-color: rgb(31 41 55);
+  color: #fff;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid rgb(55 65 81);
+  outline: none;
+  max-width: 100%;
+}
+
+/* Temporary: auto layout owns PiP — delete this rule to show the control again. */
+.telecom-pip-control {
+  display: none !important;
+}

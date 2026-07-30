@@ -3,16 +3,16 @@ import { NavLink } from 'react-router-dom'
 export function ReportSidebar() {
   return (
     <nav className="report-sidebar">
-      <h2 className="report-sidebar__title">Reports</h2>
-      <ul className="report-sidebar__list">
+      <h2 className="report-sidebar-title">Reports</h2>
+      <ul className="report-sidebar-list">
         <li>
           <NavLink
             to="/app/reports"
             end
             className={({ isActive }) =>
               isActive
-                ? 'report-sidebar__link report-sidebar__link--active'
-                : 'report-sidebar__link'
+                ? 'report-sidebar-link report-sidebar-link-active'
+                : 'report-sidebar-link'
             }
           >
             Browse
