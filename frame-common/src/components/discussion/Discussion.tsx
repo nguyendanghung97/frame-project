@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Check,
+  ChevronsDown,
   ClipboardCheck,
   Loader2,
   MessageSquareMore,
@@ -48,12 +49,34 @@ function Discussion({
   const [bannerHeight, setBannerHeight] = useState(0)
   const [requiresAck, setRequiresAck] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
+  const [isAtBottom, setIsAtBottom] = useState(true)
 
   const mainInputRef = useRef<CommentInputHandle>(null)
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const shouldAutoScrollRef = useRef(true)
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+    setTimeout(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: scrollContainerRef.current.scrollHeight,
+          behavior,
+        })
+      }
+    }, 150)
+  }, [])
   const originalEditContentRef = useRef<string | null>(null)
+
+  // Track whether user is at the bottom of the scroll container
+  useEffect(() => {
+    const el = scrollContainerRef.current
+    if (!el) return
+    const handleScroll = () => {
+      const threshold = 60
+      setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < threshold)
+    }
+    el.addEventListener('scroll', handleScroll, { passive: true })
+    return () => el.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const scopeResource =
     currentResource || defaultResource || resourceOverride || DEMO_RESOURCE
@@ -112,15 +135,13 @@ function Discussion({
     return () => clearTimeout(timer)
   }, [highlightedId])
 
+  // Scroll to bottom on initial load
   useEffect(() => {
-    if (!shouldAutoScrollRef.current) return
-    const timer = setTimeout(() => {
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
-      }
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [comments])
+    if (!initialLoading) {
+      scrollToBottom('instant')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLoading])
 
   const handleScrollToInput = useCallback(() => {
     setTimeout(() => {
@@ -194,7 +215,7 @@ function Discussion({
     const optimistic = generateOptimisticComment(content)
     if (requiresAck) optimistic.requires_acknowledgement = true
     setComments((prev) => [...prev, optimistic])
-    shouldAutoScrollRef.current = true
+    scrollToBottom()
 
     try {
       const created = await demoCreateComment({
@@ -207,6 +228,7 @@ function Discussion({
       setComments((prev) => prev.map((c) => (c.id === optimistic.id ? { ...created, status: 'success' } : c)))
       setRequiresAck(false)
       await fetchData()
+      scrollToBottom()
     } catch (err) {
       console.error('Failed to add comment:', err)
       setComments((prev) =>
@@ -272,7 +294,6 @@ function Discussion({
         setRequiresAck(false)
         setEditingId(null)
         originalEditContentRef.current = null
-        shouldAutoScrollRef.current = false
         await fetchData()
         scrollToComment(commentId)
       } catch (err) {
@@ -338,7 +359,6 @@ function Discussion({
   const confirmDelete = async (deleteId: string) => {
     try {
       await demoDeleteComment(deleteId)
-      shouldAutoScrollRef.current = false
       setEditingId(null)
       setReplyingId(null)
       setRequiresAck(false)
@@ -392,7 +412,6 @@ function Discussion({
 
   const handleAcknowledge = useCallback(
     async (commentId: string) => {
-      shouldAutoScrollRef.current = false
       await demoAcknowledgeComment({ commentId, currentUser })
       await fetchData()
       scrollToComment(commentId)
@@ -442,9 +461,9 @@ function Discussion({
         className={cn(
           'discussion-ack_toggle-box',
           !isAcked &&
-            (isChecked
-              ? 'discussion-ack_toggle-box--checked'
-              : 'discussion-ack_toggle-box--unchecked'),
+          (isChecked
+            ? 'discussion-ack_toggle-box--checked'
+            : 'discussion-ack_toggle-box--unchecked'),
           isAcked && 'discussion-ack_toggle-box--acked',
         )}
       >
@@ -489,80 +508,96 @@ function Discussion({
   return (
     <div className={cn('discussion-root', className)}>
       {bannerHeader}
-      <div
-        ref={scrollContainerRef}
-        className={cn('discussion-scroll', bannerHeight > 0 && 'discussion-scroll--banner')}
-      >
-        <div className="discussion-scroll-inner">
-          {initialLoading ? (
-            <div className="discussion-empty">
-              <div className="discussion-empty-icon_wrap">
-                <Loader2 className="discussion-empty-icon--spin" />
-              </div>
-              <p className="discussion-empty-text">Loading discussion…</p>
-            </div>
-          ) : isEmpty && showEmptyState ? (
-            <div className="discussion-empty">
-              <div className="discussion-empty-icon_wrap">
-                <MessageSquareMore className="discussion-empty-icon" />
-              </div>
-              <p className="discussion-empty-text">
-                No comments yet. Start the discussion below.
-              </p>
-            </div>
-          ) : (
-            comments.map((comment, index) => {
-              const currentDateLabel = formatDividerDate(comment.created)
-              const prevDateLabel =
-                index > 0 ? formatDividerDate(comments[index - 1].created) : null
-              const showDivider = currentDateLabel !== prevDateLabel
-
-              return (
-                <div key={comment.id} className="discussion-timeline_item">
-                  {showDivider && <DateDivider date={currentDateLabel} />}
-                  <CommentItem
-                    comment={comment}
-                    hasNext={index < comments.length - 1 || !!(replyingId || editingId)}
-                    isLast={index === comments.length - 1}
-                    hideAvatar={hideAvatar}
-                    currentUserId={currentUser.id}
-                    currentUser={currentUser}
-                    editingId={editingId}
-                    setEditingId={setEditingId}
-                    replyingId={replyingId}
-                    setReplyingId={setReplyingId}
-                    onStartEdit={handleStartEdit}
-                    onStartReply={handleStartReply}
-                    onCancelEdit={handleCancelEdit}
-                    onFocusInput={() => mainInputRef.current?.focus()}
-                    highlightedId={highlightedId}
-                    isExpanded={expandedCommentId === comment.id}
-                    onToggleExpand={(open) =>
-                      setExpandedCommentId(open ? comment.id : null)
-                    }
-                    onRefresh={() => void fetchData()}
-                    onRetry={(c) => void handleRetry(c)}
-                    onAcknowledge={handleAcknowledge}
-                    onDelete={(id) => {
-                      if (window.confirm('Delete this comment?')) {
-                        void confirmDelete(id)
-                      }
-                    }}
-                    readOnly={readOnly}
-                    scrollToComment={scrollToComment}
-                    setShouldAutoScroll={(val) => {
-                      shouldAutoScrollRef.current = val
-                    }}
-                  />
+      <div className="relative flex-1 min-h-0">
+        <div
+          ref={scrollContainerRef}
+          className={cn('discussion-scroll', bannerHeight > 0 && 'discussion-scroll--banner')}
+        >
+          <div className="discussion-scroll-inner">
+            {initialLoading ? (
+              <div className="discussion-empty">
+                <div className="discussion-empty-icon_wrap">
+                  <Loader2 className="discussion-empty-icon--spin" />
                 </div>
-              )
-            })
-          )}
+                <p className="discussion-empty-text">Loading discussion…</p>
+              </div>
+            ) : isEmpty && showEmptyState ? (
+              <div className="discussion-empty">
+                <div className="discussion-empty-icon_wrap">
+                  <MessageSquareMore className="discussion-empty-icon" />
+                </div>
+                <p className="discussion-empty-text">
+                  No comments yet. Start the discussion below.
+                </p>
+              </div>
+            ) : (
+              comments.map((comment, index) => {
+                const currentDateLabel = formatDividerDate(comment.created)
+                const prevDateLabel =
+                  index > 0 ? formatDividerDate(comments[index - 1].created) : null
+                const showDivider = currentDateLabel !== prevDateLabel
 
-          <div
-            style={{ height: Math.max(0, bannerHeight) }}
-            className="discussion-banner_spacer"
-          />
+                return (
+                  <div key={comment.id} className="discussion-timeline_item">
+                    {showDivider && <DateDivider date={currentDateLabel} />}
+                    <CommentItem
+                      comment={comment}
+                      hasNext={index < comments.length - 1 || !!(replyingId || editingId)}
+                      isLast={index === comments.length - 1}
+                      hideAvatar={hideAvatar}
+                      currentUserId={currentUser.id}
+                      currentUser={currentUser}
+                      editingId={editingId}
+                      setEditingId={setEditingId}
+                      replyingId={replyingId}
+                      setReplyingId={setReplyingId}
+                      onStartEdit={handleStartEdit}
+                      onStartReply={handleStartReply}
+                      onCancelEdit={handleCancelEdit}
+                      onFocusInput={() => mainInputRef.current?.focus()}
+                      highlightedId={highlightedId}
+                      isExpanded={expandedCommentId === comment.id}
+                      onToggleExpand={(open) =>
+                        setExpandedCommentId(open ? comment.id : null)
+                      }
+                      onRefresh={() => void fetchData()}
+                      onRetry={(c) => void handleRetry(c)}
+                      onAcknowledge={handleAcknowledge}
+                      onDelete={(id) => {
+                        if (window.confirm('Delete this comment?')) {
+                          void confirmDelete(id)
+                        }
+                      }}
+                      readOnly={readOnly}
+                      scrollToComment={scrollToComment}
+                    />
+                  </div>
+                )
+              })
+            )}
+
+            <div
+              style={{ height: Math.max(0, bannerHeight) }}
+              className="discussion-banner_spacer"
+            />
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            'discussion-scroll-to-bottom',
+            isAtBottom ? 'discussion-scroll-to-bottom--hidden' : 'discussion-scroll-to-bottom--visible',
+          )}
+        >
+          <button
+            type="button"
+            onClick={() => scrollToBottom()}
+            className="discussion-scroll-to-bottom_btn"
+            title="Scroll to latest message"
+          >
+            <ChevronsDown className="discussion-scroll-to-bottom_icon" />
+            Latest
+          </button>
         </div>
       </div>
 
@@ -596,10 +631,10 @@ function Discussion({
               onDelete={
                 editingId
                   ? () => {
-                      if (window.confirm('Delete this comment?')) {
-                        void confirmDelete(editingId)
-                      }
+                    if (window.confirm('Delete this comment?')) {
+                      void confirmDelete(editingId)
                     }
+                  }
                   : undefined
               }
               onBannerHeightChange={setBannerHeight}
@@ -622,6 +657,7 @@ function Discussion({
       )}
     </div>
   )
+
 }
 
 export default Discussion

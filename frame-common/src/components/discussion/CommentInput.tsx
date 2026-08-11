@@ -141,6 +141,7 @@ export const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
       try {
         await onSubmit(contentToSend)
         if (isEditing) setPlainContent('')
+        setTimeout(() => textareaRef.current?.focus(), 0)
       } catch (err) {
         console.error('Submit failed:', err)
       } finally {
@@ -221,7 +222,6 @@ export const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
               onKeyDown={handleKeyDown}
               placeholder={placeholder}
               rows={2}
-              disabled={submitting}
             />
 
             <div className="discussion-input-toolbar">
