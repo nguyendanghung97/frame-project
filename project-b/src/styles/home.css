@@ -1,0 +1,43 @@
+.home-layout {
+  --sidebar-w: 240px;
+}
+
+.home-layout-main,
+.home-layout-aside,
+.home-layout-right {
+  padding: 1rem;
+}
+
+.home-layout-aside {
+  width: var(--sidebar-w);
+  background-color: var(--color-background-base);
+  border-right: 1px solid var(--color-border);
+}
+
+.home-layout-right {
+  width: var(--sidebar-w);
+  background-color: var(--color-background-base);
+  border-left: 1px solid var(--color-border);
+}
+
+.home-main-title,
+.home-aside-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+}
+
+.home-main-text {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.home-aside-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #444;
+}
+
+.home-aside-list li + li {
+  margin-top: 0.35rem;
+}

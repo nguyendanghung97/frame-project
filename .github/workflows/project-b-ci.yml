@@ -1,0 +1,54 @@
+name: Project B CI
+
+on:
+  push:
+    branches:
+      - main
+    # check update file if match with this paths
+    paths:
+      - "project-b/**"
+      - "frame-common/**"
+
+  pull_request:
+    # check update file if match with this paths
+    paths:
+      - "project-b/**"
+      - "frame-common/**"
+
+jobs:
+  ci:
+    name: Lint, Type Check & Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./project-b
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: project-b/package-lock.json
+          
+      # Project references frame-common, so we need to install its dependencies 
+      # beforehand so that tsc -b can typecheck it successfully.
+      - name: Install frame-common dependencies
+        run: npm install
+        working-directory: ./frame-common
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc -b
+
+      - name: Build
+        run: npm run build

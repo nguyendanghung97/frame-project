@@ -1,0 +1,23 @@
+/* about.css */
+
+.about-layout {
+  --sidebar-w: 240px;
+}
+
+.about-layout-aside {
+  width: var(--sidebar-w);
+  background-color: var(--color-background-base);
+  border-right: 1px solid var(--color-border);
+}
+
+.about-layout-right {
+  width: var(--sidebar-w);
+  background-color: var(--color-background-base);
+  border-left: 1px solid var(--color-border);
+}
+
+.about-layout-main,
+.about-layout-aside,
+.about-layout-right {
+  padding: 1.5rem;
+}
