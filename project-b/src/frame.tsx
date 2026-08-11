@@ -10,7 +10,7 @@ function Header() {
   )
 }
 
-export class AppFrameInner extends PageFrame {
+class AppFrameInner extends PageFrame {
   renderContent() {
     return (
       <div className="app-frame">
