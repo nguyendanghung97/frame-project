@@ -74,7 +74,7 @@ export function MainFrame() {
 
 export function ReportFrame() {
   return (
-    <div className="report-frame">
+    <div className="report-frame ">
       <aside className="report-frame-sidebar">
         <ReportSidebar />
       </aside>
