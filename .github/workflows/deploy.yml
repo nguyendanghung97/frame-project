@@ -74,3 +74,9 @@ jobs:
         run: |
           echo "===== deploy-site ====="
           find deploy-site -maxdepth 3 -type f | sort
+
+      # Đóng gói deploy-site thành artifact dành cho GitHub Pages
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./deploy-site
