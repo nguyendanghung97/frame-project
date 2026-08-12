@@ -209,7 +209,7 @@ export const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
           </div>
         )}
 
-        <div className="discussion-input-row ">
+        <div className="discussion-input-row">
           {!hideAvatar && showAvatar && currentUser && (
             <Avatar user={currentUser} className="discussion-avatar-face--lg" />
           )}

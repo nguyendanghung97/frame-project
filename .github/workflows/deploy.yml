@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout source code về GitHub Actions runner
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -51,10 +50,6 @@ jobs:
       #
       # Gom output của các project thành một production site
       # duy nhất để chuẩn bị đưa lên GitHub Pages.
-      #
-      # deploy-site/
-      # ├── project/
-      # └── project-b/
       # =====================================================
       - name: Create deploy-site
         run: |
@@ -69,14 +64,37 @@ jobs:
         run: |
           cp -R project-b/dist/. deploy-site/project-b/
 
-      # Kiểm tra kết quả Assemble
       - name: Inspect deploy-site
         run: |
           echo "===== deploy-site ====="
           find deploy-site -maxdepth 3 -type f | sort
 
-      # Đóng gói deploy-site thành artifact dành cho GitHub Pages
+      # Đóng gói deploy-site thành Pages artifact
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./deploy-site
+
+  # ==========================================================
+  # DEPLOY
+  #
+  # Lấy Pages artifact từ job build-site
+  # và publish nó lên GitHub Pages.
+  # ==========================================================
+  deploy:
+    needs: build-site
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
