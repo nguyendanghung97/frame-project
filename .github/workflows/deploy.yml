@@ -138,3 +138,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Print deployed URLs
+        run: |
+          BASE="${{ steps.deployment.outputs.page_url }}"
+          echo "✅ Deployment successful!"
+          echo ""
+          echo "🔗 Project URLs:"
+          echo "   project   → ${BASE}project/"
+          echo "   project-b → ${BASE}project-b/"
