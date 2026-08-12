@@ -12,7 +12,7 @@ function NavigateKeepHash({ to, replace }: { to: string; replace?: boolean }) {
 const routes = [
   {
     index: true,
-    element: <NavigateKeepHash to="/app/home" replace />,
+    element: <NavigateKeepHash to="/home" replace />,
   },
   {
     path: '/',

@@ -10,6 +10,7 @@ const frameCommonSrc = path.resolve(rootDir, '../frame-common/src')
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/frame-project/project-b/',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] }),
