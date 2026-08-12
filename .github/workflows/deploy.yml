@@ -1,0 +1,76 @@
+name: Deploy Site
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout source code về GitHub Actions runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            project/package-lock.json
+            project-b/package-lock.json
+            frame-common/package-lock.json
+
+      - name: Install frame-common dependencies
+        run: npm ci
+        working-directory: ./frame-common
+
+      - name: Build frame-common
+        run: npm run build
+        working-directory: ./frame-common
+
+      - name: Install project dependencies
+        run: npm ci
+        working-directory: ./project
+
+      - name: Build project
+        run: npm run build
+        working-directory: ./project
+
+      - name: Install project-b dependencies
+        run: npm ci
+        working-directory: ./project-b
+
+      - name: Build project-b
+        run: npm run build
+        working-directory: ./project-b
+
+      # =====================================================
+      # ASSEMBLE
+      #
+      # Gom output của các project thành một production site
+      # duy nhất để chuẩn bị đưa lên GitHub Pages.
+      #
+      # deploy-site/
+      # ├── project/
+      # └── project-b/
+      # =====================================================
+      - name: Create deploy-site
+        run: |
+          mkdir -p deploy-site/project
+          mkdir -p deploy-site/project-b
+
+      - name: Assemble project
+        run: |
+          cp -R project/dist/. deploy-site/project/
+
+      - name: Assemble project-b
+        run: |
+          cp -R project-b/dist/. deploy-site/project-b/
+
+      # Kiểm tra kết quả Assemble
+      - name: Inspect deploy-site
+        run: |
+          echo "===== deploy-site ====="
+          find deploy-site -maxdepth 3 -type f | sort

@@ -15,7 +15,7 @@ const routes = [
     element: <NavigateKeepHash to="/app/home" replace />,
   },
   {
-    path: 'app',
+    path: '/',
     element: <MainFrame />,
     children: [
       {
@@ -42,6 +42,6 @@ const routes = [
   },
 ]
 
-const AppRouter = createBrowserRouter(routes)
+const AppRouter = createBrowserRouter(routes, { basename: '/frame-project/project/' })
 
 export default AppRouter

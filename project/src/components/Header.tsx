@@ -2,9 +2,9 @@ import { NavLink } from 'react-router-dom'
 import { buildUrlFragments, usePageContext } from 'frame-common'
 
 const links = [
-  { to: '/app/home', label: 'Home' },
-  { to: '/app/patients', label: 'Patients' },
-  { to: '/app/conference', label: 'Conference' },
+  { to: '/home', label: 'Home' },
+  { to: '/patients', label: 'Patients' },
+  { to: '/conference', label: 'Conference' },
 ]
 
 export function Header() {
