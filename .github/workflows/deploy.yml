@@ -65,11 +65,43 @@ jobs:
           cp -R project-b/dist/. deploy-site/project-b/
 
       # GitHub Pages trả 404.html cho các client-side route không có file vật lý.
-      # Dùng index.html làm 404 page để khởi động React Router và xử lý route.
+      # Giải pháp "spa-github-pages trick":
+      #   1. Root 404.html encode path vào query string rồi redirect về đúng index.html.
+      #   2. Mỗi index.html có một script decode lại URL để React Router xử lý đúng route.
       - name: Create SPA fallback
         run: |
-          cp deploy-site/project/index.html deploy-site/project/404.html
-          cp deploy-site/project-b/index.html deploy-site/project-b/404.html
+          # Tạo root 404.html — encode path + redirect về đúng sub-app
+          cat > deploy-site/404.html << 'FALLBACK'
+          <!DOCTYPE html>
+          <html>
+          <head>
+          <script>
+            // Xác định sub-app từ path (project / project-b),
+            // sau đó redirect về index.html của sub-app đó với path được encode vào query string.
+            var l = window.location;
+            var segs = l.pathname.slice(1).split('/');
+            // segs[0] = 'frame-project', segs[1] = 'project' | 'project-b'
+            var base = '/' + segs[0] + '/' + segs[1] + '/';
+            var rest = l.pathname.slice(base.length);
+            l.replace(
+              l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+              base + '?/' + rest +
+              (l.search ? '&' + l.search.slice(1) : '') +
+              l.hash
+            );
+          </script>
+          </head>
+          <body></body>
+          </html>
+          FALLBACK
+
+          # Inject decode script vào index.html của từng app.
+          # Script này chạy trước React, khôi phục lại URL gốc từ query string
+          # để React Router có thể nhận đúng pathname.
+          DECODE='<script>(function(l){if(l.search[1]==="/"){var d=l.search.slice(1).split("&").map(function(s){return s.replace(/~and~/g,"&")}).join("?");window.history.replaceState(null,null,l.pathname.slice(0,-1)+d+l.hash)}}(window.location))</script>'
+
+          sed -i "s|<head>|<head>$DECODE|" deploy-site/project/index.html
+          sed -i "s|<head>|<head>$DECODE|" deploy-site/project-b/index.html
 
       # Kiểm tra production output trước khi upload
       - name: Inspect deploy-site
