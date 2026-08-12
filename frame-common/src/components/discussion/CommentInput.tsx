@@ -194,7 +194,7 @@ export const CommentInput = forwardRef<CommentInputHandle, CommentInputProps>(
                   if (isReplying) onCancelReply?.()
                   else onCancelEdit?.()
                 }}
-                className="discussion-item_banner-close"
+                className="discussion-item_banner-close "
                 title="Cancel"
               >
                 <X className="discussion-item_banner-close-icon" />

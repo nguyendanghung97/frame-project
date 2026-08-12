@@ -64,6 +64,14 @@ jobs:
         run: |
           cp -R project-b/dist/. deploy-site/project-b/
 
+      # GitHub Pages trả 404.html cho các client-side route không có file vật lý.
+      # Dùng index.html làm 404 page để khởi động React Router và xử lý route.
+      - name: Create SPA fallback
+        run: |
+          cp deploy-site/project/index.html deploy-site/project/404.html
+          cp deploy-site/project-b/index.html deploy-site/project-b/404.html
+
+      # Kiểm tra production output trước khi upload
       - name: Inspect deploy-site
         run: |
           echo "===== deploy-site ====="
