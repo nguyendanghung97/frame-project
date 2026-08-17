@@ -1,4 +1,4 @@
-// Trigger CI build for project only (Testing Cache Feature)
+// Trigger CI build for sequential deploy
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
