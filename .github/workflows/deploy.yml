@@ -30,7 +30,6 @@ jobs:
           key: ${{ runner.os }}-common-${{ hashFiles('frame-common/**') }}
 
       - name: Install frame-common dependencies
-        if: steps.cache-common.outputs.cache-hit != 'true'
         run: npm ci
         working-directory: ./frame-common
 
@@ -49,7 +48,6 @@ jobs:
           key: ${{ runner.os }}-project-${{ hashFiles('project/**', 'frame-common/**') }}
 
       - name: Install project dependencies
-        if: steps.cache-project.outputs.cache-hit != 'true'
         run: npm ci
         working-directory: ./project
 
@@ -68,7 +66,6 @@ jobs:
           key: ${{ runner.os }}-project-b-${{ hashFiles('project-b/**', 'frame-common/**') }}
 
       - name: Install project-b dependencies
-        if: steps.cache-project-b.outputs.cache-hit != 'true'
         run: npm ci
         working-directory: ./project-b
 
