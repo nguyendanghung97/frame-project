@@ -21,27 +21,59 @@ jobs:
             project-b/package-lock.json
             frame-common/package-lock.json
 
+      # --- Caching & Building frame-common ---
+      - name: Cache frame-common dist
+        id: cache-common
+        uses: actions/cache@v4
+        with:
+          path: frame-common/dist
+          key: ${{ runner.os }}-common-${{ hashFiles('frame-common/**') }}
+
       - name: Install frame-common dependencies
+        if: steps.cache-common.outputs.cache-hit != 'true'
         run: npm ci
         working-directory: ./frame-common
 
       - name: Build frame-common
+        if: steps.cache-common.outputs.cache-hit != 'true'
         run: npm run build
         working-directory: ./frame-common
 
+      # --- Caching & Building project ---
+      - name: Cache project dist
+        id: cache-project
+        uses: actions/cache@v4
+        with:
+          path: project/dist
+          # Nếu project hoặc frame-common thay đổi, hash sẽ đổi -> build lại
+          key: ${{ runner.os }}-project-${{ hashFiles('project/**', 'frame-common/**') }}
+
       - name: Install project dependencies
+        if: steps.cache-project.outputs.cache-hit != 'true'
         run: npm ci
         working-directory: ./project
 
       - name: Build project
+        if: steps.cache-project.outputs.cache-hit != 'true'
         run: npm run build
         working-directory: ./project
 
+      # --- Caching & Building project-b ---
+      - name: Cache project-b dist
+        id: cache-project-b
+        uses: actions/cache@v4
+        with:
+          path: project-b/dist
+          # Nếu project-b hoặc frame-common thay đổi, hash sẽ đổi -> build lại
+          key: ${{ runner.os }}-project-b-${{ hashFiles('project-b/**', 'frame-common/**') }}
+
       - name: Install project-b dependencies
+        if: steps.cache-project-b.outputs.cache-hit != 'true'
         run: npm ci
         working-directory: ./project-b
 
       - name: Build project-b
+        if: steps.cache-project-b.outputs.cache-hit != 'true'
         run: npm run build
         working-directory: ./project-b
 
